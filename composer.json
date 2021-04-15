@@ -1,0 +1,56 @@
+{
+    "name": "slack-php/slack-app-framework",
+    "type": "library",
+    "license": "MIT",
+    "description": "Provides a foundation upon which to build a Slack application in PHP",
+    "authors": [
+        {
+            "name": "Jeremy Lindblom",
+            "email": "jeremeamia@gmail.com"
+        }
+    ],
+    "config": {
+        "sort-packages": true,
+        "platform": {
+            "php": "7.4"
+        }
+    },
+    "require": {
+        "php": ">=7.4",
+        "ext-ctype": "*",
+        "ext-json": "*",
+        "jeremeamia/slack-block-kit": "dev-master",
+        "nyholm/psr7": "^1.3",
+        "nyholm/psr7-server": "^1.0",
+        "psr/container": "^1.0",
+        "psr/http-factory": "^1.0",
+        "psr/http-message": "^1.0",
+        "psr/http-server-handler": "^1.0",
+        "psr/http-server-middleware": "^1.0",
+        "psr/log": "^1.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "SlackPhp\\Framework\\": "src/"
+        }
+    },
+    "require-dev": {
+        "friendsofphp/php-cs-fixer": "^2.18",
+        "phpstan/phpstan": "^0.12.77",
+        "phpunit/phpunit": "^9.5"
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "SlackPhp\\Framework\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "style": "php-cs-fixer fix --dry-run --verbose --show-progress=none",
+        "style-fix": "php-cs-fixer fix",
+        "stan": "phpstan analyse --level=5 src tests",
+        "test": "phpunit",
+        "test-unit": "phpunit --testsuite=unit",
+        "test-integ": "phpunit --testsuite=integ",
+        "test-all": ["@style", "@stan", "@test"]
+    }
+}
