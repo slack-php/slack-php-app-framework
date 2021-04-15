@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace SlackPhp\Framework;
 
-use Jeremeamia\Slack\BlockKit\Surfaces;
+use SlackPhp\BlockKit\Surfaces;
 
 /**
  * Provides helpers for coercing loosely-typed values to their actual, desired type.

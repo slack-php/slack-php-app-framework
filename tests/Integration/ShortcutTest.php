@@ -2,9 +2,9 @@
 
 namespace SlackPhp\Framework\Tests\Integration;
 
+use SlackPhp\BlockKit\Surfaces\Modal;
 use SlackPhp\Framework\App;
 use SlackPhp\Framework\Context;
-use Jeremeamia\Slack\BlockKit\Surfaces\Modal;
 
 class ShortcutTest extends IntegTestCase
 {

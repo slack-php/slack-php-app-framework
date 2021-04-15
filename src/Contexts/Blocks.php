@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace SlackPhp\Framework\Contexts;
 
-use Jeremeamia\Slack\BlockKit\Partials\OptionList;
-use Jeremeamia\Slack\BlockKit\{Config, Kit, Surfaces};
+use SlackPhp\BlockKit\{Config, Kit, Surfaces};
+use SlackPhp\BlockKit\Partials\OptionList;
 
 class Blocks
 {

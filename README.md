@@ -57,8 +57,8 @@ the app home page.
 
 declare(strict_types=1);
 
+use SlackPhp\BlockKit\Surfaces\{Message, Modal};
 use SlackPhp\Framework\{App, Context, Route};
-use Jeremeamia\Slack\BlockKit\Surfaces\{Message, Modal};
 
 // Note: Expects SLACK_SIGNING_KEY and SLACK_BOT_TOKEN to be set in environment.
 

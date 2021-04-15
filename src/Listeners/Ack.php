@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace SlackPhp\Framework\Listeners;
 
-use Jeremeamia\Slack\BlockKit\Surfaces\Message;
+use SlackPhp\BlockKit\Surfaces\Message;
 use SlackPhp\Framework\{Coerce, Context, Listener};
 
 /**

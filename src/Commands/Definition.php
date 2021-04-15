@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace SlackPhp\Framework\Commands;
 
-use Jeremeamia\Slack\BlockKit\Surfaces\Message;
+use SlackPhp\BlockKit\Surfaces\Message;
 
 class Definition
 {

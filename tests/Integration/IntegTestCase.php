@@ -10,7 +10,7 @@ use SlackPhp\Framework\Http\HttpServer;
 use SlackPhp\Framework\Http\ResponseEmitter;
 use SlackPhp\Framework\Interceptor;
 use SlackPhp\Framework\Interceptors\Tap;
-use Jeremeamia\Slack\BlockKit\Surfaces\Message;
+use SlackPhp\BlockKit\Surfaces\Message;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;

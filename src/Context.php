@@ -6,12 +6,12 @@ namespace SlackPhp\Framework;
 
 use ArrayAccess;
 use Closure;
-use Jeremeamia\Slack\BlockKit\{Formatter, Kit};
-use Jeremeamia\Slack\BlockKit\Partials\OptionList;
-use Jeremeamia\Slack\BlockKit\Surfaces\{AppHome, Message};
 use JsonException;
 use JsonSerializable;
 use Psr\Container\ContainerInterface;
+use SlackPhp\BlockKit\{Formatter, Kit};
+use SlackPhp\BlockKit\Partials\OptionList;
+use SlackPhp\BlockKit\Surfaces\{AppHome, Message};
 use SlackPhp\Framework\Contexts\{
     Blocks,
     HasData,

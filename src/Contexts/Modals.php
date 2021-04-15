@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace SlackPhp\Framework\Contexts;
 
+use SlackPhp\BlockKit\Surfaces\Modal;
 use SlackPhp\Framework\{Coerce, Context, Exception};
-use Jeremeamia\Slack\BlockKit\Surfaces\Modal;
 use Throwable;
 
 class Modals
