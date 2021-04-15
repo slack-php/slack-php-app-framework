@@ -21,13 +21,14 @@ class AppCredentials
     public static function fromEnv(?string $prefix = null): self
     {
         $env = Env::vars($prefix);
-        return self::new()
-            ->withAppToken($env->getAppToken())
-            ->withClientId($env->getClientId())
-            ->withClientSecret($env->getClientSecret())
-            ->withDefaultBotToken($env->getBotToken())
-            ->withSigningKey($env->getSigningKey())
-            ->withStateSecret($env->getStateSecret());
+        return new self(
+            $env->getSigningKey(),
+            $env->getBotToken(),
+            $env->getClientId(),
+            $env->getClientSecret(),
+            $env->getStateSecret(),
+            $env->getAppToken()
+        );
     }
 
     public static function new(): self
