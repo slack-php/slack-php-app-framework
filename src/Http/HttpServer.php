@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace SlackPhp\Framework\Http;
 
-use SlackPhp\Framework\Auth\{AppCredentials, AppCredentialsStore};
 use SlackPhp\Framework\{Deferrer, AppServer};
 use Nyholm\Psr7\Factory\Psr17Factory;
 use Nyholm\Psr7\Response;
@@ -15,18 +14,14 @@ use Throwable;
 
 class HttpServer extends AppServer
 {
-    private ?AppCredentialsStore $appCredentialsStore;
     private ?Deferrer $deferrer;
     private ?ResponseEmitter $emitter;
     private ?ServerRequestInterface $request;
 
-    public function withAppCredentialsStore(AppCredentialsStore $appCredentialsStore): self
-    {
-        $this->appCredentialsStore = $appCredentialsStore;
-
-        return $this;
-    }
-
+    /**
+     * @param Deferrer $deferrer
+     * @return $this
+     */
     public function withDeferrer(Deferrer $deferrer): self
     {
         $this->deferrer = $deferrer;
@@ -34,6 +29,10 @@ class HttpServer extends AppServer
         return $this;
     }
 
+    /**
+     * @param ServerRequestInterface $request
+     * @return $this
+     */
     public function withRequest(ServerRequestInterface $request): self
     {
         $this->request = $request;
@@ -41,6 +40,10 @@ class HttpServer extends AppServer
         return $this;
     }
 
+    /**
+     * @param ResponseEmitter $emitter
+     * @return $this
+     */
     public function withResponseEmitter(ResponseEmitter $emitter): self
     {
         $this->emitter = $emitter;
@@ -65,16 +68,6 @@ class HttpServer extends AppServer
     }
 
     /**
-     * Stops receiving requests from Slack.
-     *
-     * Depending on the implementation, `stop()` may not need to do anything.
-     */
-    public function stop(): void
-    {
-        // No action necessary, since PHP's typical request lifecycle ends automatically.
-    }
-
-    /**
      * Gets a representation of the request data from super globals.
      *
      * @return ServerRequestInterface
@@ -94,7 +87,7 @@ class HttpServer extends AppServer
         return $this->request;
     }
 
-    protected function emitResponse(ResponseInterface $response): void
+    private function emitResponse(ResponseInterface $response): void
     {
         $emitter = $this->emitter ?? new EchoResponseEmitter();
         $emitter->emit($response);
@@ -110,27 +103,5 @@ class HttpServer extends AppServer
         $handler = new AppHandler($this->getApp(), $this->deferrer ?? null);
 
         return Util::applyMiddleware($handler, [new AuthMiddleware($this->getAppCredentials())]);
-    }
-
-    /**
-     * Gets AppCredentials for use by Auth.
-     *
-     * Determines the AppCredentials by reconciling configured credentials on the AppConfig and the AppCredentialsStore
-     * configured on the AppServer.
-     *
-     * @return AppCredentials
-     */
-    private function getAppCredentials(): AppCredentials
-    {
-        $config = $this->getApp()->getConfig();
-
-        $credentials = $config->getAppCredentials();
-        if (!$credentials->supportsHttpAuth() && isset($this->appCredentialsStore)) {
-            $credentials = $this->appCredentialsStore->getAppCredentials($config->getId());
-        }
-
-        $config->withAppCredentials($credentials);
-
-        return $credentials;
     }
 }

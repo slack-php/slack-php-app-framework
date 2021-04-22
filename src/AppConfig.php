@@ -201,6 +201,10 @@ class AppConfig
     }
 
     /**
+     * Explicitly sets the both token to use for Auth.
+     *
+     * You can also set this via the environment variable: SLACK_BOT_TOKEN.
+     *
      * @param string $botToken
      * @return $this
      */

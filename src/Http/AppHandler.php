@@ -5,7 +5,8 @@ declare(strict_types=1);
 namespace SlackPhp\Framework\Http;
 
 use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
-use SlackPhp\Framework\{Application, Context, Deferrer, PreAckDeferrer};
+use SlackPhp\Framework\{Application, Context, Deferrer};
+use SlackPhp\Framework\Deferral\PreAckDeferrer;
 use Nyholm\Psr7\Response;
 use Psr\Http\Server\RequestHandlerInterface as HandlerInterface;
 

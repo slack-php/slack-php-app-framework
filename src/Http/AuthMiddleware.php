@@ -19,9 +19,6 @@ class AuthMiddleware implements MiddlewareInterface
     public function __construct(AppCredentials $appCredentials)
     {
         $this->appCredentials = $appCredentials;
-        if (!$this->appCredentials->supportsHttpAuth()) {
-            throw new AuthException('No signing key provided', 401);
-        }
     }
 
     /**
@@ -39,6 +36,11 @@ class AuthMiddleware implements MiddlewareInterface
         // Authentication can be disabled via env var `SLACKPHP_SKIP_AUTH=1` (for testing purposes only).
         if (Env::getSkipAuth()) {
             return $handler->handle($request);
+        }
+
+        // Ensure the necessary credentials have been supplied.
+        if (!$this->appCredentials->supportsHttpAuth()) {
+            throw new AuthException('No signing key provided', 401);
         }
 
         // Validate the signature.

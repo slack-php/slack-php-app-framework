@@ -6,6 +6,9 @@ namespace SlackPhp\Framework\Auth;
 
 use SlackPhp\Framework\Env;
 
+/**
+ * Contains credentials required for all types of app authentication.
+ */
 class AppCredentials
 {
     /** @var array<string, mixed> */
@@ -155,30 +158,29 @@ class AppCredentials
         return isset($this->defaultBotToken);
     }
 
-    public function supportsInstallationOAuth(): bool
+    public function supportsInstallAuth(): bool
     {
         return isset($this->clientId, $this->clientSecret);
     }
 
-    /**
-     * @return string|null
-     */
+    public function supportsAnyAuth(): bool
+    {
+        return $this->supportsHttpAuth()
+            || $this->supportsApiAuth()
+            || $this->supportsInstallAuth()
+            || $this->supportsSocketAuth();
+    }
+
     public function getAppToken(): ?string
     {
         return $this->appToken;
     }
 
-    /**
-     * @return string|null
-     */
     public function getClientId(): ?string
     {
         return $this->clientId;
     }
 
-    /**
-     * @return string|null
-     */
     public function getClientSecret(): ?string
     {
         return $this->clientSecret;
@@ -192,25 +194,16 @@ class AppCredentials
         return $this->customSecrets;
     }
 
-    /**
-     * @return string|null
-     */
     public function getDefaultBotToken(): ?string
     {
         return $this->defaultBotToken;
     }
 
-    /**
-     * @return string
-     */
     public function getSigningKey(): ?string
     {
         return $this->signingKey;
     }
 
-    /**
-     * @return string
-     */
     public function getStateSecret(): ?string
     {
         return $this->stateSecret;

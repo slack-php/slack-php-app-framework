@@ -5,20 +5,25 @@ declare(strict_types=1);
 namespace SlackPhp\Framework\Http;
 
 use Closure;
-use Nyholm\Psr7\Response;
 use Psr\Http\Message\ServerRequestInterface;
-use SlackPhp\Framework\Application;
-use Throwable;
+use SlackPhp\Framework\{Application, Coerce};
 
 class MultiTenantHttpServer extends HttpServer
 {
     private const APP_ID_KEY = '_app';
 
-    /** @var array<string, callable> */
+    /** @var array<string, mixed> */
     private array $apps = [];
     private ?Closure $appIdDetector;
 
-    public function registerApp(string $appId, callable $appFactory): self
+    /**
+     * Register an app by app ID to be routed to.
+     *
+     * @param string $appId
+     * @param string|callable(): Application $appFactory App class name, include file, or factory callback.
+     * @return $this
+     */
+    public function registerApp(string $appId, $appFactory): self
     {
         $this->apps[$appId] = $appFactory;
 
@@ -38,20 +43,6 @@ class MultiTenantHttpServer extends HttpServer
         return $this;
     }
 
-    /**
-     * Starts receiving and processing requests from Slack.
-     */
-    public function start(): void
-    {
-        try {
-            parent::start();
-        } catch (Throwable $exception) {
-            $response = new Response($exception->getCode() ?: 500);
-            $this->getLogger()->error('Error responding to incoming Slack request', compact('exception'));
-            $this->emitResponse($response);
-        }
-    }
-
     protected function getApp(): Application
     {
         // Get the app ID from the request.
@@ -60,17 +51,8 @@ class MultiTenantHttpServer extends HttpServer
             throw new HttpException('Cannot determine app ID');
         }
 
-        // Make sure an app was registered for the app ID.
-        $appFactory = $this->apps[$appId] ?? null;
-        if ($appFactory === null) {
-            throw new HttpException("No app registered for app ID: {$appId}");
-        }
-
-        // Create the app from its configured factory, and make sure it's valid.
-        $app = $appFactory();
-        if (!$app instanceof Application) {
-            throw new HttpException("Invalid application for app ID: {$appId}");
-        }
+        // Create the app for the app ID.
+        $app = $this->instantiateApp($appId);
 
         // Reconcile the registered app ID with the App's configured ID.
         $configuredId = $app->getConfig()->getId();
@@ -84,6 +66,30 @@ class MultiTenantHttpServer extends HttpServer
         $this->withApp($app);
 
         return parent::getApp();
+    }
+
+    /**
+     * @param string $appId ID for the application
+     * @return Application
+     * @noinspection PhpIncludeInspection
+     */
+    private function instantiateApp(string $appId): Application
+    {
+        // Create the app from its configured factory, and make sure it's valid.
+        $factory = $this->apps[$appId] ?? null;
+        if (is_null($factory)) {
+            throw new HttpException("No app registered for app ID: {$appId}");
+        } elseif (is_string($factory) && class_exists($factory)) {
+            $app = new $factory();
+        } elseif (is_string($factory) && is_file($factory)) {
+            $app = require $factory;
+        } elseif (is_callable($factory)) {
+            $app = $factory();
+        } else {
+            throw new HttpException("Invalid application for app ID: {$appId}");
+        }
+
+        return Coerce::application($app);
     }
 
     private function getAppIdDetector(): Closure

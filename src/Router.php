@@ -84,7 +84,7 @@ class Router implements Listener
      */
     public function commandAsync(string $name, $listener): self
     {
-        return $this->command($name, Route::Async($listener, $this->commandAck));
+        return $this->command($name, Route::async($listener, $this->commandAck));
     }
 
     /**

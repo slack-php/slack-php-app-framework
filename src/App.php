@@ -218,6 +218,21 @@ class App extends Application
     }
 
     /**
+     * Explicitly sets the both token to use for Auth.
+     *
+     * You can also set this via the environment variable: SLACK_BOT_TOKEN.
+     *
+     * @param string $botToken
+     * @return $this
+     */
+    public function withBotToken(string $botToken): self
+    {
+        $this->config->withBotToken($botToken);
+
+        return $this;
+    }
+
+    /**
      * Sets the app credentials for the app.
      *
      * These credentials are an encapsulation of all the various app-specific keys and secrets needed for auth.

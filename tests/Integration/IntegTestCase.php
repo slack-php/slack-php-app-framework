@@ -3,20 +3,21 @@
 namespace SlackPhp\Framework\Tests\Integration;
 
 use SlackPhp\Framework\Context;
-use SlackPhp\Framework\Clients\ApiClient;
-use SlackPhp\Framework\Clients\RespondClient;
-use SlackPhp\Framework\Contexts\DataBag;
-use SlackPhp\Framework\Http\HttpServer;
-use SlackPhp\Framework\Http\ResponseEmitter;
-use SlackPhp\Framework\Interceptor;
-use SlackPhp\Framework\Interceptors\Tap;
-use SlackPhp\BlockKit\Surfaces\Message;
+
 use Nyholm\Psr7\Factory\Psr17Factory;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
+use SlackPhp\BlockKit\Surfaces\Message;
+use SlackPhp\Framework\Clients\ApiClient;
+use SlackPhp\Framework\Clients\RespondClient;
+use SlackPhp\Framework\Contexts\DataBag;
+use SlackPhp\Framework\Http\HttpServer;
+use SlackPhp\Framework\Interceptor;
+use SlackPhp\Framework\Interceptors\Tap;
+use SlackPhp\Framework\Tests\Fakes\FakeResponseEmitter;
 
 class IntegTestCase extends TestCase
 {
@@ -25,14 +26,10 @@ class IntegTestCase extends TestCase
     private const HEADER_SIGNATURE = 'X-Slack-Signature';
     private const HEADER_TIMESTAMP = 'X-Slack-Request-Timestamp';
 
-    /** @var Psr17Factory */
-    protected $httpFactory;
-
+    protected Psr17Factory $httpFactory;
     /** @var LoggerInterface|MockObject */
     protected $logger;
-
-    /** @var ResponseInterface|null */
-    protected $lastResponse;
+    private FakeResponseEmitter $responseEmitter;
 
     public function setUp(): void
     {
@@ -42,11 +39,12 @@ class IntegTestCase extends TestCase
         parent::setUp();
         $this->httpFactory = new Psr17Factory();
         $this->logger = $this->createMock(LoggerInterface::class);
+        $this->responseEmitter = new FakeResponseEmitter();
     }
 
     protected function parseResponse(?ResponseInterface $response = null): DataBag
     {
-        $response = $response ?? $this->getLastResponse();
+        $response = $response ?? $this->responseEmitter->getLastResponse();
 
         $content = (string) $response->getBody();
         if ($content === '') {
@@ -58,18 +56,6 @@ class IntegTestCase extends TestCase
         } catch (\JsonException $exception) {
             $this->fail('Could not parse response JSON: ' . $exception->getMessage());
         }
-    }
-
-    protected function getLastResponse(): ResponseInterface
-    {
-        if ($this->lastResponse) {
-            $response = $this->lastResponse;
-            $this->lastResponse = null;
-
-            return $response;
-        }
-
-        $this->fail('There was no last response');
     }
 
     protected function createCommandRequest(array $data, ?int $timestamp = null): ServerRequestInterface
@@ -108,29 +94,10 @@ class IntegTestCase extends TestCase
 
     protected function createHttpServer(ServerRequestInterface $request): HttpServer
     {
-        $setLastResponse = function (ResponseInterface $response): void {
-            $this->lastResponse = $response;
-        };
-
-        $emitter = new class($setLastResponse) implements ResponseEmitter {
-            /** @var callable */
-            private $fn;
-
-            public function __construct(callable $fn)
-            {
-                $this->fn = $fn;
-            }
-
-            public function emit(ResponseInterface $response): void
-            {
-                ($this->fn)($response);
-            }
-        };
-
         return HttpServer::new()
             ->withLogger($this->logger)
             ->withRequest($request)
-            ->withResponseEmitter($emitter);
+            ->withResponseEmitter($this->responseEmitter);
     }
 
     protected function failOnLoggedErrors(): void

@@ -2,7 +2,9 @@
 
 declare(strict_types=1);
 
-namespace SlackPhp\Framework;
+namespace SlackPhp\Framework\Deferral;
+
+use SlackPhp\Framework\{Context, Deferrer, Listener};
 
 /**
  * A synchronous implementation of Deferrer, that does the additional processing prior to the "ack" HTTP response.

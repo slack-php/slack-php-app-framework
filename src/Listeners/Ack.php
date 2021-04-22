@@ -21,9 +21,7 @@ class Ack implements Listener
      */
     public function __construct($message = null)
     {
-        if ($message !== null) {
-            $this->message = Coerce::message($message);
-        }
+        $this->message = $message ? Coerce::message($message) : null;
     }
 
     public function handle(Context $context): void
