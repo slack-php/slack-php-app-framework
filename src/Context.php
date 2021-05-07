@@ -342,8 +342,9 @@ class Context implements ArrayAccess, JsonSerializable
      */
     public function respond($message, ?string $url = null): void
     {
-        if (!$url) {
-            $url = (string) $this->payload->getOneOf(['response_url', 'response_urls.0.response_url'], true);
+        $url ??= $this->payload->getResponseUrl();
+        if ($url === null) {
+            throw new Exception('Cannot respond: Response URL must be available in the payload or explicitly provided');
         }
 
         if (!isset($this->respondClient)) {

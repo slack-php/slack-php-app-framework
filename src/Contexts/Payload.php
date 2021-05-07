@@ -180,6 +180,30 @@ class Payload implements JsonSerializable
     }
 
     /**
+     * Get the response URL from the payload, if present.
+     *
+     * Is present for anything that has a conversation context.
+     *
+     * @return string|null
+     */
+    public function getResponseUrl(): ?string
+    {
+        $responseUrl = $this->getOneOf(['response_url', 'response_urls.0.response_url']);
+        if ($responseUrl === null) {
+            $metadata = $this->get('view.private_metadata');
+            if ($metadata !== null) {
+                $responseUrl = PrivateMetadata::decode($metadata)->get('response_url');
+            }
+        }
+
+        if ($responseUrl !== null) {
+            $responseUrl = (string) $responseUrl;
+        }
+
+        return $responseUrl;
+    }
+
+    /**
      * Gets indentifying information about the payload for the purposes of logging/debugging.
      *
      * @return array

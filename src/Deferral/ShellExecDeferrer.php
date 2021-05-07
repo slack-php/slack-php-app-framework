@@ -41,7 +41,7 @@ class ShellExecDeferrer implements Deferrer
     {
         $context->logger()->debug('Deferring processing by running a command with shell_exec in the background');
         $data = escapeshellarg($this->serializeContext($context));
-        $command = "cd {$this->dir};nohup {$this->script} {$data} > /dev/null 2>&1 &";
+        $command = "cd {$this->dir};nohup {$this->script} {$data} > /dev/null &";
         shell_exec($command);
     }
 
