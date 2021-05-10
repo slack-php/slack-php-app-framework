@@ -22,7 +22,7 @@ abstract class Filter implements Interceptor
     public function intercept(Context $context, Listener $listener): void
     {
         $matched = $this->matches($context);
-        $context->logger()->withData(['filter:' . static::class => $matched ? 'match' : 'not-match']);
+        $context->logger()->addContext(['filter:' . static::class => $matched ? 'match' : 'not-match']);
 
         if (!$matched) {
             $listener = $this->defaultListener;

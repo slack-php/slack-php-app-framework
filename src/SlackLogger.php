@@ -58,7 +58,19 @@ class SlackLogger extends AbstractLogger
         return $this;
     }
 
+    /**
+     * @deprecated use addContext() instead
+     * @param array $context
+     * @return $this
+     */
     public function withData(array $context): self
+    {
+        $this->context = $context + $this->context;
+
+        return $this;
+    }
+
+    public function addContext(array $context): self
     {
         $this->context = $context + $this->context;
 

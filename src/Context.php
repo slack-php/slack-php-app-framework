@@ -111,7 +111,7 @@ class Context implements ArrayAccess, JsonSerializable
 
         // Update the Logger with Context data.
         $this->logger()
-            ->withData($this->payload->getSummary())
+            ->addContext($this->payload->getSummary())
             ->debug('Incoming Slack request', [
                 'context' => $this->toArray(),
             ]);

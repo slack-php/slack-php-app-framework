@@ -85,6 +85,34 @@ trait HasData
     }
 
     /**
+     * @param string[] $keys
+     * @param bool $required Whether to throw an exception if any of the values are set.
+     * @return array<string, string|array|int|float|bool|null>
+     */
+    public function getAllOf(array $keys, bool $required = false): array
+    {
+        $values = [];
+        $missing = [];
+        foreach ($keys as $key) {
+            $value = $this->get($key);
+            if ($value === null) {
+                $missing[] = $key;
+            } else {
+                $values[$key] = $value;
+            }
+        }
+
+        if ($required && !empty($missing)) {
+            $class = static::class;
+            $list = implode(', ', array_map(fn (string $key) => "\"{$key}\"", $missing));
+
+            throw new Exception("Missing required values from {$class}: all of {$list}.");
+        }
+
+        return $values;
+    }
+
+    /**
      * @param array $keys
      * @param array $data
      * @return string|array|int|float|bool|null

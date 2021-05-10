@@ -59,7 +59,12 @@ class StderrLogger extends AbstractLogger
 
         // Apply special formatting for "exception" fields.
         if (isset($context['exception'])) {
-            $context['exception'] = explode("\n", (string) $context['exception']);
+            $exception = $context['exception'];
+            if ($exception instanceof Exception) {
+                $context = $exception->getContext() + $context;
+            }
+
+            $context['exception'] = explode("\n", (string) $exception);
         }
 
         fwrite($this->stream, json_encode(compact('level', 'message', 'context')) . "\n");

@@ -65,7 +65,7 @@ class AppConfig
     public function withId(string $id): self
     {
         $this->id = $id;
-        $this->getLogger()->withData(['app_id' => $id]);
+        $this->getLogger()->addContext(['app_id' => $id]);
 
         return $this;
     }
@@ -89,7 +89,7 @@ class AppConfig
         $this->alias = $alias;
         $this->getLogger()
             ->withName($alias)
-            ->withData(['app_name' => $alias]);
+            ->addContext(['app_name' => $alias]);
 
         return $this;
     }
@@ -114,7 +114,7 @@ class AppConfig
     {
         $this->logger = SlackLogger::wrap($logger)
             ->withName($this->getAlias())
-            ->withData(array_filter([
+            ->addContext(array_filter([
                 'app_id' => $this->getId(),
                 'app_name' => $this->getAlias(),
             ]));
