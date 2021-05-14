@@ -176,7 +176,12 @@ class Payload implements JsonSerializable
      */
     public function getMetadata(): PrivateMetadata
     {
-        return PrivateMetadata::decode($this->get('view.private_metadata', true));
+        $data = $this->get('view.private_metadata');
+        if ($data === null) {
+            return new PrivateMetadata();
+        }
+
+        return PrivateMetadata::decode($data);
     }
 
     /**
@@ -188,19 +193,10 @@ class Payload implements JsonSerializable
      */
     public function getResponseUrl(): ?string
     {
-        $responseUrl = $this->getOneOf(['response_url', 'response_urls.0.response_url']);
-        if ($responseUrl === null) {
-            $metadata = $this->get('view.private_metadata');
-            if ($metadata !== null) {
-                $responseUrl = PrivateMetadata::decode($metadata)->get('response_url');
-            }
-        }
+        $responseUrl = $this->getOneOf(['response_url', 'response_urls.0.response_url'])
+            ?? $this->getMetadata()->get('response_url');
 
-        if ($responseUrl !== null) {
-            $responseUrl = (string) $responseUrl;
-        }
-
-        return $responseUrl;
+        return $responseUrl === null ? null : (string) $responseUrl;
     }
 
     /**

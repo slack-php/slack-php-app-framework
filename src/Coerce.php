@@ -14,12 +14,16 @@ final class Coerce
     /**
      * Coerces a Message-like value to an actual Message surface.
      *
-     * @param Surfaces\Message|array|string $message
+     * @param Surfaces\Message|array|string|callable(): Surfaces\Message $message
      * @return Surfaces\Message
      * @internal
      */
     public static function message($message): Surfaces\Message
     {
+        if (is_callable($message)) {
+            $message = $message();
+        }
+
         if ($message instanceof Surfaces\Message) {
             return $message;
         } elseif (is_string($message)) {
@@ -34,12 +38,16 @@ final class Coerce
     /**
      * Coerces a Modal-like value to an actual Modal surface.
      *
-     * @param Surfaces\Modal|array|string $modal
+     * @param Surfaces\Modal|array|string|callable(): Surfaces\Modal $modal
      * @return Surfaces\Modal
      * @internal
      */
     public static function modal($modal): Surfaces\Modal
     {
+        if (is_callable($modal)) {
+            $modal = $modal();
+        }
+
         if ($modal instanceof Surfaces\Modal) {
             return $modal;
         } elseif (is_string($modal)) {
@@ -54,12 +62,16 @@ final class Coerce
     /**
      * Coerces an "App Home"-like value to an actual App Home surface.
      *
-     * @param Surfaces\AppHome|array|string $appHome
+     * @param Surfaces\AppHome|array|string|callable(): Surfaces\AppHome $appHome
      * @return Surfaces\AppHome
      * @internal
      */
     public static function appHome($appHome): Surfaces\AppHome
     {
+        if (is_callable($appHome)) {
+            $appHome = $appHome();
+        }
+
         if ($appHome instanceof Surfaces\AppHome) {
             return $appHome;
         } elseif (is_string($appHome)) {
