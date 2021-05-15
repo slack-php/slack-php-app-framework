@@ -18,7 +18,7 @@ class Modals
     }
 
     /**
-     * @param Modal|array|string $modal
+     * @param Modal|array|string|callable(): Modal $modal
      * @param string|null $triggerId
      * @return array
      */
@@ -38,7 +38,7 @@ class Modals
     }
 
     /**
-     * @param Modal|array|string $modal
+     * @param Modal|array|string|callable(): Modal $modal
      * @param string|null $triggerId
      * @return array
      */
@@ -58,7 +58,7 @@ class Modals
     }
 
     /**
-     * @param Modal|array|string $modal
+     * @param Modal|array|string|callable(): Modal $modal
      * @param string|null $viewId
      * @param string|null $hash
      * @param string|null $externalId

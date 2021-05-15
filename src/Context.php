@@ -288,7 +288,7 @@ class Context implements ArrayAccess, JsonSerializable
      * Acks generally have an empty body, but for some payload types, it may be appropriate to send a message (command)
      * or other data (block_suggestion) as part of the ack.
      *
-     * @param Message|JsonSerializable|array|string|null $ack Message or data to include in the ack's body.
+     * @param Message|JsonSerializable|array|string|callable(): Message|null $ack Message/data to use as the ack body.
      * @throws JsonException if non-null ack cannot be JSON encoded.
      */
     public function ack($ack = null): void
@@ -337,7 +337,7 @@ class Context implements ArrayAccess, JsonSerializable
     }
 
     /**
-     * @param Message|array|string $message
+     * @param Message|array|string|callable(): Message $message
      * @param string|null $url
      */
     public function respond($message, ?string $url = null): void
@@ -355,7 +355,7 @@ class Context implements ArrayAccess, JsonSerializable
     }
 
     /**
-     * @param Message|array|string $message
+     * @param Message|array|string|callable(): Message $message
      * @param string|null $channel
      * @param string|null $threadTs
      */
@@ -376,7 +376,7 @@ class Context implements ArrayAccess, JsonSerializable
     }
 
     /**
-     * @param AppHome|array|string $appHome
+     * @param AppHome|array|string|callable(): AppHome $appHome
      * @return array
      */
     public function home($appHome): array

@@ -37,7 +37,7 @@ class View
     }
 
     /**
-     * @param Modal|array|string $modal
+     * @param Modal|array|string|callable(): Modal $modal
      */
     public function push($modal): void
     {
@@ -48,7 +48,7 @@ class View
     }
 
     /**
-     * @param Modal|array|string $modal
+     * @param Modal|array|string|callable(): Modal $modal
      */
     public function update($modal): void
     {
