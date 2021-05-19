@@ -6,6 +6,7 @@ namespace SlackPhp\Framework\Deferral;
 
 use Closure;
 use SlackPhp\Framework\{AppServer, Context, Exception};
+use SlackPhp\Framework\Auth\TokenStore;
 use Throwable;
 
 /**
@@ -17,6 +18,7 @@ class DeferredContextCliServer extends AppServer
     private array $args;
     private ?Closure $deserializeCallback;
     private int $exitCode = 0;
+    private TokenStore $tokenStore;
 
     /**
      * @param string[] $args
@@ -40,6 +42,17 @@ class DeferredContextCliServer extends AppServer
         return $this;
     }
 
+    /**
+     * @param TokenStore $tokenStore
+     * @return $this
+     */
+    public function withTokenStore(TokenStore $tokenStore): self
+    {
+        $this->tokenStore = $tokenStore;
+
+        return $this;
+    }
+
     protected function init(): void
     {
         global $argv;
@@ -51,6 +64,9 @@ class DeferredContextCliServer extends AppServer
         try {
             $this->getLogger()->debug('Started processing of deferred context');
             $context = $this->deserializeContext($this->args[1] ?? '');
+            if (isset($this->tokenStore)) {
+                $context->withTokenStore($this->tokenStore);
+            }
             $this->getApp()->handle($context);
             $this->getLogger()->debug('Completed processing of deferred context');
         } catch (Throwable $exception) {
