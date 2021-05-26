@@ -22,10 +22,11 @@ use function natsort;
  */
 class CommandRouter implements Listener
 {
-    /** @var array<string, Listener> */
-    private array $routes;
+    private Listener $default;
     private string $description;
     private int $maxLevels;
+    /** @var array<string, Listener> */
+    private array $routes;
 
     public static function new(): self
     {
@@ -37,7 +38,7 @@ class CommandRouter implements Listener
         $this->routes = [];
         $this->description = '';
         $this->maxLevels = 1;
-        $this->add('list', Closure::fromCallable([$this, 'listSubCommands']));
+        $this->add('help', Closure::fromCallable([$this, 'showHelp']));
         foreach ($routes as $subCommand => $listener) {
             $this->add($subCommand, $listener);
         }
@@ -45,13 +46,29 @@ class CommandRouter implements Listener
 
     /**
      * @param string $subCommand
-     * @param Listener|callable|class-string $listener
+     * @param Listener|callable(Context): void|class-string $listener
      * @return $this
      */
     public function add(string $subCommand, $listener): self
     {
-        $this->routes[$subCommand] = Coerce::listener($listener);
-        $this->maxLevels = max($this->maxLevels, count(explode(' ', $subCommand)));
+        $listener = Coerce::listener($listener);
+        if ($subCommand === '*') {
+            $this->default = $listener;
+        } else {
+            $this->routes[$subCommand] = $listener;
+            $this->maxLevels = max($this->maxLevels, count(explode(' ', $subCommand)));
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param Listener|callable(Context): void|class-string $listener
+     * @return $this
+     */
+    public function withDefault($listener): self
+    {
+        $this->default = Coerce::listener($listener);
 
         return $this;
     }
@@ -60,7 +77,7 @@ class CommandRouter implements Listener
      * @param string $description
      * @return self
      */
-    public function description(string $description): self
+    public function withDescription(string $description): self
     {
         $this->description = $description;
 
@@ -85,31 +102,35 @@ class CommandRouter implements Listener
             array_pop($nameArgs);
         }
 
-        $context->logger()->debug('CommandRouter could not find sub-command; routing to "list" instead');
-        $this->listSubCommands($context);
+        if ($this->default) {
+            $this->default->handle($context);
+        } else {
+            $this->showHelp($context);
+        }
     }
 
-    private function listSubCommands(Context $ctx): void
+    private function showHelp(Context $context): void
     {
-        $cmd = $ctx->payload()->get('command');
-        $fmt = $ctx->fmt();
-        $msg = $ctx->blocks()->message()->header("The {$cmd} Command");
+        $cmd = $context->payload()->get('command');
+        $fmt = $context->fmt();
+        $msg = $context->blocks()->message();
+
+        $msg->header("The {$cmd} Command");
         if ($this->description) {
             $msg->text($this->description);
         }
 
         $routes = array_keys($this->routes);
         natsort($routes);
-
         $msg->newSection()->mrkdwnText($fmt->lines([
-            '*Available commands*:',
+            '*Available sub-commands*:',
             $fmt->bulletedList(array_map(fn (string $subCommand) => $fmt->code("{$cmd} {$subCommand}"), $routes))
         ]));
 
-        if ($ctx->isAcknowledged()) {
-            $ctx->respond($msg);
+        if ($context->isAcknowledged()) {
+            $context->respond($msg);
         } else {
-            $ctx->ack($msg);
+            $context->ack($msg);
         }
     }
 }

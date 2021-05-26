@@ -221,6 +221,28 @@ class Context implements ArrayAccess, JsonSerializable
         return $this->appId;
     }
 
+    public function getAppConfig(): AppConfig
+    {
+        if (!isset($this->appConfig)) {
+            $this->appConfig = new AppConfig();
+        }
+
+        return $this->appConfig;
+    }
+
+    public function getApiClient(): ApiClient
+    {
+        if (!isset($this->apiClient)) {
+            $tokenStore = $this->getAppConfig()->getTokenStore();
+            $this->apiClient = new SimpleApiClient($tokenStore->get(
+                $this->payload->getTeamId(),
+                $this->payload->getEnterpriseId()
+            ));
+        }
+
+        return $this->apiClient;
+    }
+
     public function getAck(): ?string
     {
         return $this->ack;
@@ -258,14 +280,7 @@ class Context implements ArrayAccess, JsonSerializable
      */
     public function api(string $api, array $params): array
     {
-        if (!isset($this->apiClient)) {
-            $this->apiClient = new SimpleApiClient($this->getAppConfig()->getTokenStore()->get(
-                $this->payload->getTeamId(),
-                $this->payload->getEnterpriseId()
-            ));
-        }
-
-        return $this->apiClient->call($api, $params);
+        return $this->getApiClient()->call($api, $params);
     }
 
     public function blocks(): Blocks
@@ -455,15 +470,6 @@ class Context implements ArrayAccess, JsonSerializable
     public function offsetUnset($offset)
     {
         $this->set($offset, null);
-    }
-
-    private function getAppConfig(): AppConfig
-    {
-        if (!isset($this->appConfig)) {
-            $this->appConfig = new AppConfig();
-        }
-
-        return $this->appConfig;
     }
 
     private function reconcileAppId(): void
