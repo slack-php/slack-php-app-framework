@@ -6,7 +6,6 @@ namespace SlackPhp\Framework\Deferral;
 
 use Closure;
 use SlackPhp\Framework\{AppServer, Context, Exception};
-use SlackPhp\Framework\Auth\TokenStore;
 use Throwable;
 
 /**
@@ -18,7 +17,6 @@ class DeferredContextCliServer extends AppServer
     private array $args;
     private ?Closure $deserializeCallback;
     private int $exitCode = 0;
-    private TokenStore $tokenStore;
 
     /**
      * @param string[] $args
@@ -42,17 +40,6 @@ class DeferredContextCliServer extends AppServer
         return $this;
     }
 
-    /**
-     * @param TokenStore $tokenStore
-     * @return $this
-     */
-    public function withTokenStore(TokenStore $tokenStore): self
-    {
-        $this->tokenStore = $tokenStore;
-
-        return $this;
-    }
-
     protected function init(): void
     {
         global $argv;
@@ -61,12 +48,15 @@ class DeferredContextCliServer extends AppServer
 
     public function start(): void
     {
+        // Process args.
+        $serializedContext = $this->args[1] ?? '';
+        $softExit = ($this->args[2] ?? '') === '--soft-exit';
+
+        // Run the app.
         try {
             $this->getLogger()->debug('Started processing of deferred context');
-            $context = $this->deserializeContext($this->args[1] ?? '');
-            if (isset($this->tokenStore)) {
-                $context->withTokenStore($this->tokenStore);
-            }
+            $context = $this->deserializeContext($serializedContext);
+            $this->getAppCredentials();
             $this->getApp()->handle($context);
             $this->getLogger()->debug('Completed processing of deferred context');
         } catch (Throwable $exception) {
@@ -74,15 +64,16 @@ class DeferredContextCliServer extends AppServer
             $this->exitCode = 1;
         }
 
-        $this->stop();
+        if (!$softExit) {
+            $this->stop();
+        }
     }
 
+    /**
+     * @return never-returns
+     */
     public function stop(): void
     {
-        if (isset($this->args[2]) && $this->args[2] === '--soft-exit') {
-            return;
-        }
-
         exit($this->exitCode);
     }
 

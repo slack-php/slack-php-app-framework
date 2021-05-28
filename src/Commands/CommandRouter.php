@@ -102,7 +102,7 @@ class CommandRouter implements Listener
             array_pop($nameArgs);
         }
 
-        if ($this->default) {
+        if (isset($this->default)) {
             $this->default->handle($context);
         } else {
             $this->showHelp($context);
