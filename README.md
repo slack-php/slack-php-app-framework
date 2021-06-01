@@ -34,7 +34,7 @@ This small app responds to the `/cool` slash command.
 use SlackPhp\Framework\App;
 use SlackPhp\Framework\Context;
 
-// Note: Expects SLACK_SIGNING_KEY to be set in environment.
+putenv("SLACK_SIGNING_KEY=blafoobla");
 
 App::new()
     ->command('cool', function (Context $ctx) {
