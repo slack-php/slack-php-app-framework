@@ -190,6 +190,7 @@ class MyCoolApp extends BaseApp
 > Assumptions:
 >
 > - You have required the Composer autoloader to enable autoloading of the framework files.
+> - You have configured composer.json so that your `MyApp` namespaced code is autoloaded.
 > - You have set `SLACK_SIGNING_KEY` in the environment (e.g., `putenv("SLACK_SIGNING_KEY=foo");`)
 > - You have set `SLACK_BOT_TOKEN` in the environment (e.g., `putenv("SLACK_BOT_TOKEN=bar");`)
 
