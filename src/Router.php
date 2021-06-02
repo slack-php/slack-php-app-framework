@@ -235,6 +235,18 @@ class Router implements Listener
     }
 
     /**
+     * Configures an async listener for an incoming "view_submission" request.
+     *
+     * @param string $callbackId
+     * @param Listener|callable(Context): void|class-string $listener
+     * @return $this
+     */
+    public function viewSubmissionAsync(string $callbackId, $listener): self
+    {
+        return $this->viewSubmission($callbackId, Route::async($listener));
+    }
+
+    /**
      * Configures a listener for an incoming "view_closed" request.
      *
      * @param string $callbackId
