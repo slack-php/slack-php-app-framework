@@ -13,7 +13,11 @@ help you get started there if you are new to Slack app development:
 
 ## Under Development
 
-:warning: This is under heavy development. _Breaking changes may occur on any commit._ :warning:
+:warning: This is under heavy development and dogfooding. _Breaking changes may occur on any commit._ :warning:
+
+Also, the project is lacking test coverage and documentation, so use at your own risk (as is the case with most OSS).
+- For questions, feedback, suggestions, etc., use [Discussions][].
+- For issues or concerns, use [Issues][].
 
 ## Developing Apps
 
@@ -28,13 +32,16 @@ Slack to the app and all the actions you can take to interact with or communicat
 
 This small app responds to the `/cool` slash command.
 
+> Assumptions:
+>
+> - You have required the Composer autoloader to enable autoloading of the framework files.
+> - You have set `SLACK_SIGNING_KEY` in the environment (e.g., `putenv("SLACK_SIGNING_KEY=foo");`)
+
 ```php
 <?php
 
 use SlackPhp\Framework\App;
 use SlackPhp\Framework\Context;
-
-putenv("SLACK_SIGNING_KEY=blafoobla");
 
 App::new()
     ->command('cool', function (Context $ctx) {
@@ -52,6 +59,12 @@ the app home page.
 <details>
 <summary>"Hello World" app code</summary>
 
+> Assumptions:
+>
+> - You have required the Composer autoloader to enable autoloading of the framework files.
+> - You have set `SLACK_SIGNING_KEY` in the environment (e.g., `putenv("SLACK_SIGNING_KEY=foo");`)
+> - You have set `SLACK_BOT_TOKEN` in the environment (e.g., `putenv("SLACK_BOT_TOKEN=bar");`)
+
 ```php
 <?php
 
@@ -59,8 +72,6 @@ declare(strict_types=1);
 
 use SlackPhp\BlockKit\Surfaces\{Message, Modal};
 use SlackPhp\Framework\{App, Context, Route};
-
-// Note: Expects SLACK_SIGNING_KEY and SLACK_BOT_TOKEN to be set in environment.
 
 // Helper for creating a modal with the "hello-form" for choosing a greeting.
 $createModal = function (): Modal {
@@ -176,12 +187,17 @@ class MyCoolApp extends BaseApp
 
 `index.php`
 
+> Assumptions:
+>
+> - You have required the Composer autoloader to enable autoloading of the framework files.
+> - You have set `SLACK_SIGNING_KEY` in the environment (e.g., `putenv("SLACK_SIGNING_KEY=foo");`)
+> - You have set `SLACK_BOT_TOKEN` in the environment (e.g., `putenv("SLACK_BOT_TOKEN=bar");`)
+
 ```php
 <?php
 
 use MyApp\MyCoolApp;
 
-// Note: Expects SLACK_SIGNING_KEY and SLACK_BOT_TOKEN to be set in environment.
 $app = new MyCoolApp();
 $app->run();
 ```
@@ -254,10 +270,22 @@ $ctx->container(): ContainerInterface // Returns an instance of the configured P
 </pre>
 </details>
 
-## Standards
+## Standards Used
 
 - PSR-1, PSR-12: Coding Style
 - PSR-3: Logger Interface
 - PSR-4: Autoloading
 - PSR-7, PSR-15, PSR-17: HTTP
 - PSR-11: Container Interface
+
+## Not Implemented
+
+This project is a WIP. The following are known to be missing:
+
+- OAuth flow for handling installations to a different workspace.
+    - Though there are some helpful things in the `SlackPhp\Framework\Auth` namespace if you need to roll your own.
+- Socket mode (likely not going to support this in slack-php).
+
+[Discussions]: https://github.com/slack-php/slack-php-app-framework/discussions
+[Issues]: https://github.com/slack-php/slack-php-app-framework/issues
+[Pull Request]: https://github.com/slack-php/slack-php-app-framework/pulls
