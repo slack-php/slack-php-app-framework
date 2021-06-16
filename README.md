@@ -1,32 +1,34 @@
 # Slack App Framework for PHP
 
-A small, PHP framework for building Slack Apps. Takes inspiration from Slack's Bolt frameworks.
+A PHP framework for building Slack apps. It takes inspiration from Slack's Bolt frameworks.
 
-This library is only useful if you understand the basics of building Slack applications. Here is some documentation to
-help you get started there if you are new to Slack app development:
+If you are new to Slack app development, you will want to learn about it on
+[Slack's website](https://api.slack.com/start). This library is only useful if you already understand the basics of
+building Slack applications.
 
-- [Getting Started Guide](https://api.slack.com/start)
-- [Interactivity Overview](https://api.slack.com/interactivity)
-- [Events Overview](https://api.slack.com/apis/connections/events-api)
-- [Messaging Overview](https://api.slack.com/messaging/managing)
-- [Block Kit Overview](https://api.slack.com/block-kit)
+## :warning: WARNING: Under Heavy Development
 
-## Under Development
-
-:warning: This is under heavy development and dogfooding. _Breaking changes may occur on any commit._ :warning:
-
-Also, the project is lacking test coverage and documentation, so use at your own risk (as is the case with most OSS).
+This is under heavy development and dogfooding. _Breaking changes may occur on any commit._ Also, the project is
+lacking test coverage and documentation, so use at your own risk (as is the case with most OSS).
 - For questions, feedback, suggestions, etc., use [Discussions][].
 - For issues or concerns, use [Issues][].
 
-## Developing Apps
+## Installation
 
-When configuring the app in Slack, you should point all configurable URLs to the root URL of your deployed app code.
+- Requires PHP 7.4+
+- Use Composer to install: `composer require slack-php/slack-app-framework`
 
-When developing the app code, you declare one or more `Listener`s using the `App`'s routing methods, that correspond to
+## Usage
+
+When creating an app, you can configure your app from the Slack website. The framework is designed to recieve requests
+from all of your app's interaction points, so you should configure all of the URLs (e.g., in **Slash Commands**,
+**Interactivity & Shortcuts** (don't forget the _Select Menus_ section), and **Event Subscriptions**) to point to the
+root URL of your deployed app code.
+
+When developing the app code, you declare one or more `Listener`s using the `App`'s routing methods that correspond to
 the different types of app interaction. `Listener`s can be declared as closures, or as objects and class names of type
 `SlackPhp\Framework\Listener`. A `Listener` receives a `Context` object, which contains the payload data provided by
-Slack to the app and all the actions you can take to interact with or communicate back to Slack.
+Slack to the app and provides methods for all the actions you can take to interact with or communicate back to Slack.
 
 ## Quick Example
 
