@@ -17,7 +17,7 @@ class WIP implements Listener
         $message = 'Work in progress';
         if ($context->payload()->isType(PayloadType::command())) {
             $context->ack($message);
-        } elseif ($context->payload()->get('view')) {
+        } elseif ($context->payload()->isType(PayloadType::viewSubmission())) {
             $context->view()->push($message);
         } elseif ($context->payload()->get('trigger_id')) {
             $context->modals()->open($message);
