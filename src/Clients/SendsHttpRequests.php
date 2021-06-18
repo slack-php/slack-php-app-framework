@@ -24,11 +24,11 @@ trait SendsHttpRequests
     ];
 
     private static array $errorMessages = [
-        'network' => 'API request could not be completed',
-        'unexpected' => 'API request experienced an unexpected error: %s',
-        'unsuccessful' => 'API response was unsuccessful: %d',
-        'json_decode' => 'API response contained invalid JSON: %s',
-        'json_encode' => 'API request content contained invalid JSON: %s',
+        'network' => 'Slack API request could not be completed',
+        'unexpected' => 'Slack API request experienced an unexpected error: %s',
+        'unsuccessful' => 'Slack API response was unsuccessful: %s',
+        'json_decode' => 'Slack API response contained invalid JSON: %s',
+        'json_encode' => 'Slack API request content contained invalid JSON: %s',
     ];
 
     private function sendJsonRequest(string $method, string $url, array $input): array

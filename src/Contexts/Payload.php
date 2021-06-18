@@ -176,7 +176,7 @@ class Payload implements JsonSerializable
      */
     public function getMetadata(): PrivateMetadata
     {
-        $data = $this->get('view.private_metadata');
+        $data = $this->getOneOf(['view.private_metadata', 'event.view.private_metadata']);
         if ($data === null) {
             return new PrivateMetadata();
         }

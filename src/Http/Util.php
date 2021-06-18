@@ -62,6 +62,7 @@ abstract class Util
 
         // Create the context with data from the HTTP request.
         return new Context($payload, $request->getAttributes() + [
+            'timestamp' => (int) $request->getHeaderLine('X-Slack-Request-Timestamp'),
             'http' => [
                 'query' => $request->getQueryParams(),
                 'headers' => array_filter(

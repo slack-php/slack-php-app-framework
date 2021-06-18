@@ -47,7 +47,7 @@ trait HasData
      *
      * @param string $key Key or dot-separated path to value in data.
      * @param bool $required Whether to throw an exception if the value is not set.
-     * @return string|array|int|float|bool|null
+     * @return mixed
      */
     public function get(string $key, bool $required = false)
     {
@@ -63,7 +63,7 @@ trait HasData
     /**
      * @param string[] $keys
      * @param bool $required Whether to throw an exception if none of the values are set.
-     * @return string|array|int|float|bool|null
+     * @return mixed
      */
     public function getOneOf(array $keys, bool $required = false)
     {
@@ -87,7 +87,7 @@ trait HasData
     /**
      * @param string[] $keys
      * @param bool $required Whether to throw an exception if any of the values are set.
-     * @return array<string, string|array|int|float|bool|null>
+     * @return array<string, mixed>
      */
     public function getAllOf(array $keys, bool $required = false): array
     {
@@ -115,7 +115,7 @@ trait HasData
     /**
      * @param array $keys
      * @param array $data
-     * @return string|array|int|float|bool|null
+     * @return mixed
      */
     private function getDeep(array $keys, array &$data)
     {

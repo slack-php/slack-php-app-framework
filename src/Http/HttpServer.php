@@ -87,7 +87,7 @@ class HttpServer extends AppServer
         return $this->request;
     }
 
-    private function emitResponse(ResponseInterface $response): void
+    protected function emitResponse(ResponseInterface $response): void
     {
         $emitter = $this->emitter ?? new EchoResponseEmitter();
         $emitter->emit($response);
@@ -98,7 +98,7 @@ class HttpServer extends AppServer
      *
      * @return HandlerInterface
      */
-    private function getHandler(): HandlerInterface
+    protected function getHandler(): HandlerInterface
     {
         $handler = new AppHandler($this->getApp(), $this->deferrer ?? null);
 

@@ -392,15 +392,17 @@ class Context implements ArrayAccess, JsonSerializable
 
     /**
      * @param AppHome|array|string|callable(): AppHome $appHome
+     * @param string|null $userId If null, the value from the current payload will be used.
+     * @param bool $useHashIfAvailable Set to false if you want to overwrite the current app home without a hash check.
      * @return array
      */
-    public function home($appHome): array
+    public function home($appHome, ?string $userId = null, bool $useHashIfAvailable = true): array
     {
         try {
             $result = $this->api('views.publish', array_filter([
-                'user_id' => $this->payload->getUserId(),
+                'user_id' => $userId ?? $this->payload->getUserId(),
                 'view' => Coerce::appHome($appHome)->toArray(),
-                'hash' => $this->payload->get('view.hash'),
+                'hash' => $useHashIfAvailable ? $this->payload->get('view.hash') : null,
             ]));
 
             return $result['view'] ?? [];

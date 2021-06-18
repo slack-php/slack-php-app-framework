@@ -477,7 +477,9 @@ class App extends Application
      */
     public function viewSubmissionAsync(string $callbackId, $listener): self
     {
-        return $this->router->viewSubmissionAsync($callbackId, $listener);
+        $this->router->viewSubmissionAsync($callbackId, $listener);
+
+        return $this;
     }
 
     /**
