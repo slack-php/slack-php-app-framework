@@ -273,6 +273,17 @@ $ctx->container(): ContainerInterface // Returns an instance of the configured P
 </pre>
 </details>
 
+## Socket Mode
+
+[Socket mode][] support is provided by a separate package. See [slack-php/slack-php-socket-mode][].
+
+## Not Implemented
+
+This project is a WIP. The following are known to be missing:
+
+- OAuth flow for handling installations to a different workspace.
+    - Though there are some class in the `SlackPhp\Framework\Auth` namespace if you need to roll your own right now.
+
 ## Standards Used
 
 - PSR-1, PSR-12: Coding Style
@@ -281,14 +292,8 @@ $ctx->container(): ContainerInterface // Returns an instance of the configured P
 - PSR-7, PSR-15, PSR-17: HTTP
 - PSR-11: Container Interface
 
-## Not Implemented
-
-This project is a WIP. The following are known to be missing:
-
-- OAuth flow for handling installations to a different workspace.
-    - Though there are some helpful things in the `SlackPhp\Framework\Auth` namespace if you need to roll your own.
-- Socket mode (likely not going to support this in slack-php).
-
 [Discussions]: https://github.com/slack-php/slack-php-app-framework/discussions
 [Issues]: https://github.com/slack-php/slack-php-app-framework/issues
 [Pull Request]: https://github.com/slack-php/slack-php-app-framework/pulls
+[Socket Mode]: https://api.slack.com/apis/connections/socket
+[slack-php/slack-php-socket-mode]: https://github.com/slack-php/slack-php-socket-mode
