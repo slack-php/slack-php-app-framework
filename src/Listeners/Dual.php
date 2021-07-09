@@ -11,6 +11,8 @@ use SlackPhp\Framework\{Context, Listener};
  *
  * Note: Does not automatically call defer. This allows the flexibility to not defer if the sync logic represents a
  *       complete handling of the request in some cases.
+ *
+ * @deprecated Use \SlackPhp\Framework\Listeners\Base instead.
  */
 abstract class Dual implements Listener
 {

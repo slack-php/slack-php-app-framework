@@ -51,7 +51,8 @@ class Chain implements Interceptor
 
     public function intercept(Context $context, Listener $listener): void
     {
-        while ($interceptor = array_pop($this->interceptors)) {
+        $interceptors = $this->interceptors;
+        while ($interceptor = array_pop($interceptors)) {
             $listener = new Intercepted($interceptor, $listener);
         }
 
