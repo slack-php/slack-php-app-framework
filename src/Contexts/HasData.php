@@ -6,15 +6,10 @@ namespace SlackPhp\Framework\Contexts;
 
 use SlackPhp\Framework\Exception;
 
-use const ARRAY_FILTER_USE_KEY;
-
 trait HasData
 {
     /** @var array<string, mixed>  */
     protected array $data = [];
-
-    /** @var array<string, bool> */
-    protected array $sensitive = [];
 
     /**
      * This constructor can (and likely should be) be overridden by trait users.
@@ -31,11 +26,6 @@ trait HasData
         foreach ($data as $key => $value) {
             if ($value === null) {
                 continue;
-            }
-
-            if ($value instanceof SensitiveValue) {
-                $this->sensitive[$key] = true;
-                $value = $value->getRawValue();
             }
 
             $this->data[$key] = $value;
@@ -149,7 +139,7 @@ trait HasData
      */
     public function toArray(): array
     {
-        return array_filter($this->data, fn (string $key) => !isset($this->sensitive[$key]), ARRAY_FILTER_USE_KEY);
+        return $this->data;
     }
 
     public function jsonSerialize()
