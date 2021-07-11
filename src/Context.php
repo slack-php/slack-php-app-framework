@@ -122,8 +122,8 @@ class Context implements ArrayAccess, JsonSerializable
     /**
      * Sets the callback function for acks.
      *
-     * This does is not needed for all server implementations, but it is, it Should be set by the Server implementation,
-     * and should not be explicitly provided.
+     * This is not needed for all server implementations, but if it is, it should be set by the Server implementation,
+     * and should not be explicitly provided otherwise.
      *
      * @param callable $callback
      * @return $this

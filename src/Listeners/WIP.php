@@ -14,17 +14,24 @@ class WIP implements Listener
 {
     public function handle(Context $context): void
     {
+        $hasApi = $context->getAppConfig()->getAppCredentials()->supportsApiAuth();
+        $data = $context->payload();
+
         $message = 'Work in progress';
-        if ($context->payload()->isType(PayloadType::command())) {
-            $context->ack($message);
-        } elseif ($context->payload()->isType(PayloadType::viewSubmission())) {
+        if ($data->isType(PayloadType::viewSubmission())) {
             $context->view()->push($message);
-        } elseif ($context->payload()->get('trigger_id')) {
-            $context->modals()->open($message);
-        } elseif ($context->payload()->getResponseUrl()) {
+        } elseif ($data->getResponseUrl()) {
             $context->respond($message);
+        } elseif ($hasApi && $data->isType(PayloadType::eventCallback()) && $data->getTypeId() === 'app_home_opened') {
+            $context->home($message);
+        } elseif ($hasApi && $data->get('trigger_id')) {
+            $context->modals()->open($message);
         } else {
             $context->logger()->debug($message);
+        }
+
+        if (!$context->isAcknowledged()) {
+            $context->ack();
         }
     }
 }

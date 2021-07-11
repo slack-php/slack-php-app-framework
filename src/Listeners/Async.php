@@ -12,7 +12,7 @@ use SlackPhp\Framework\{Context, Listener};
  * If a sync listener is not provided, then it defaults to an "ack". Either way, defer() is automatically used so that
  * the primary (async) listener will be established correctly for post-"ack" execution.
  */
-class Async implements Listener
+class Async extends Base
 {
     private Listener $asyncListener;
     private ?Listener $syncListener;
@@ -27,13 +27,13 @@ class Async implements Listener
         $this->syncListener = $syncListener ?? new Ack();
     }
 
-    public function handle(Context $context): void
+    protected function handleAck(Context $context): void
     {
-        if ($context->isAcknowledged()) {
-            $this->asyncListener->handle($context);
-        } else {
-            $this->syncListener->handle($context);
-            $context->defer();
-        }
+        $this->syncListener->handle($context);
+    }
+
+    protected function handleAfterAck(Context $context): void
+    {
+        $this->asyncListener->handle($context);
     }
 }
