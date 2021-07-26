@@ -15,6 +15,7 @@ use SlackPhp\BlockKit\Surfaces\{AppHome, Message};
 use SlackPhp\Framework\Contexts\{
     Blocks,
     HasData,
+    Home,
     Modals,
     Payload,
     PayloadType,
@@ -190,22 +191,6 @@ class Context implements ArrayAccess, JsonSerializable
         return $this;
     }
 
-    /**
-     * Sets a sensitive value in the context data.
-     *
-     * Sensitive values are scrubbed when doing toArray() or jsonSerialize().
-     *
-     * @param string $key
-     * @param mixed $value
-     * @return $this
-     */
-    public function setSensitive(string $key, $value): self
-    {
-        $this->sensitive[$key] = true;
-
-        return $this->set($key, $value);
-    }
-
     public function isAcknowledged(): bool
     {
         return $this->isAcknowledged;
@@ -346,11 +331,6 @@ class Context implements ArrayAccess, JsonSerializable
         $this->isDeferred = $defer;
     }
 
-    public function error(string $error): void
-    {
-        throw new Exception($error);
-    }
-
     /**
      * @param Message|array|string|callable(): Message $message
      * @param string|null $url
@@ -395,6 +375,7 @@ class Context implements ArrayAccess, JsonSerializable
      * @param string|null $userId If null, the value from the current payload will be used.
      * @param bool $useHashIfAvailable Set to false if you want to overwrite the current app home without a hash check.
      * @return array
+     * @deprecated Use appHome() and its methods.
      */
     public function home($appHome, ?string $userId = null, bool $useHashIfAvailable = true): array
     {
@@ -411,9 +392,11 @@ class Context implements ArrayAccess, JsonSerializable
         }
     }
 
-    /**
-     * @return Modals
-     */
+    public function appHome(): Home
+    {
+        return new Home($this);
+    }
+
     public function modals(): Modals
     {
         return new Modals($this);
