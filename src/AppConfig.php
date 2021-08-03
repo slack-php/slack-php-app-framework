@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace SlackPhp\Framework;
 
+use Closure;
 use Psr\Container\ContainerInterface;
 use Psr\Log\{LoggerInterface, NullLogger};
 use SlackPhp\Framework\Auth\{AppCredentials, SingleTeamTokenStore, TokenStore};
+use SlackPhp\BlockKit\Surfaces\{AppHome, Message, Modal};
 use SlackPhp\Framework\Contexts\ClassContainer;
 
 /**
@@ -22,6 +24,9 @@ class AppConfig
     private ?string $clientSecret;
     private ?ContainerInterface $container;
     private ?Env $env;
+    private Closure $errorAppHomeFactory;
+    private Closure $errorMessageFactory;
+    private Closure $errorModalFactory;
     private ?string $id;
     private ?SlackLogger $logger;
     /** @var string[]|null */
@@ -387,5 +392,84 @@ class AppConfig
     public function getAppToken(): ?string
     {
         return $this->appToken ?? $this->getEnv()->getAppToken();
+    }
+
+    /**
+     * Sets the callback for generating the error message when using `$context->error($ex)->message()`.
+     *
+     * @param callable(string): Message $factoryFn
+     * @return $this
+     */
+    public function withErrorMessageFactory(callable $factoryFn): self
+    {
+        $this->errorMessageFactory = Closure::fromCallable($factoryFn);
+
+        return $this;
+    }
+
+    /**
+     * Retrieves the callback for generating the error message when using `$context->error($ex)->message()`.
+     */
+    public function getErrorMessageFactory(): Closure
+    {
+        return $this->errorMessageFactory
+            ?? function (string $message): Message {
+                return Message::new()
+                    ->text(':warning: An Error Occurred')
+                    ->text("> {$message}");
+            };
+    }
+
+    /**
+     * Sets the callback for generating the error modal when using `$context->error($ex)->modal()`.
+     *
+     * @param callable(string): Modal $factoryFn
+     * @return $this
+     */
+    public function withErrorModalFactory(callable $factoryFn): self
+    {
+        $this->errorModalFactory = Closure::fromCallable($factoryFn);
+
+        return $this;
+    }
+
+    /**
+     * Retrieves the callback for generating the error modal when using `$context->error($ex)->modal()`.
+     */
+    public function getErrorModalFactory(): Closure
+    {
+        return $this->errorModalFactory
+            ?? function (string $message): Modal {
+                return Modal::new()
+                    ->title('Error')
+                    ->text(':warning: An Error Occurred')
+                    ->text("> {$message}");
+            };
+    }
+
+    /**
+     * Sets the callback for generating the error modal when using `$context->error($ex)->appHome()`.
+     *
+     * @param callable(string): AppHome $factoryFn
+     * @return $this
+     */
+    public function withErrorAppHomeFactory(callable $factoryFn): self
+    {
+        $this->errorAppHomeFactory = Closure::fromCallable($factoryFn);
+
+        return $this;
+    }
+
+    /**
+     * Retrieves the callback for generating the error modal when using `$context->error($ex)->appHome()`.
+     */
+    public function getErrorAppHomeFactory(): Closure
+    {
+        return $this->errorAppHomeFactory
+            ?? function (string $message): AppHome {
+                return AppHome::new()
+                    ->text(':warning: An Error Occurred')
+                    ->text("> {$message}");
+            };
     }
 }

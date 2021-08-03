@@ -23,9 +23,14 @@ class WIP implements Listener
         } elseif ($data->getResponseUrl()) {
             $context->respond($message);
         } elseif ($hasApi && $data->isType(PayloadType::eventCallback()) && $data->getTypeId() === 'app_home_opened') {
-            $context->home($message);
+            $context->appHome()->update($message);
         } elseif ($hasApi && $data->get('trigger_id')) {
-            $context->modals()->open($message);
+            // If a modal is already open, push a new one on the stack, otherwise, open a new stack.
+            if ($data->get('view.type') === 'modal') {
+                $context->modals()->push($message);
+            } else {
+                $context->modals()->open($message);
+            }
         } else {
             $context->logger()->debug($message);
         }

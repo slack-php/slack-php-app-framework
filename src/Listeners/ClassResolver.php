@@ -31,6 +31,8 @@ class ClassResolver implements Listener
             throw new Exception('Resolved class name to a non-Listener');
         }
 
+        $context->logger()->addContext(['listener' => $this->class]);
+
         $listener->handle($context);
     }
 }
