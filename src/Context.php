@@ -14,6 +14,7 @@ use SlackPhp\BlockKit\Partials\OptionList;
 use SlackPhp\BlockKit\Surfaces\{AppHome, Message};
 use SlackPhp\Framework\Contexts\{
     Blocks,
+    Error,
     HasData,
     Home,
     Modals,
@@ -371,6 +372,22 @@ class Context implements ArrayAccess, JsonSerializable
     }
 
     /**
+     * @param OptionList|array|null $options
+     */
+    public function options($options): void
+    {
+        if (!$this->payload->isType(PayloadType::blockSuggestion())) {
+            throw new Exception('Can only to use `options()` for block_suggestion requests');
+        }
+
+        if (is_array($options)) {
+            $options = OptionList::new()->options($options);
+        }
+
+        $this->ack($options);
+    }
+
+    /**
      * @param AppHome|array|string|callable(): AppHome $appHome
      * @param string|null $userId If null, the value from the current payload will be used.
      * @param bool $useHashIfAvailable Set to false if you want to overwrite the current app home without a hash check.
@@ -392,16 +409,31 @@ class Context implements ArrayAccess, JsonSerializable
         }
     }
 
+    /**
+     * Perform an operation on the App Home.
+     *
+     * @return Home
+     */
     public function appHome(): Home
     {
         return new Home($this);
     }
 
+    /**
+     * Perform an operation with modals.
+     *
+     * @return Modals
+     */
     public function modals(): Modals
     {
         return new Modals($this);
     }
 
+    /**
+     * Ack with a response to the current modal.
+     *
+     * @return View
+     */
     public function view(): View
     {
         if (!$this->payload->isType(PayloadType::viewSubmission())) {
@@ -412,19 +444,14 @@ class Context implements ArrayAccess, JsonSerializable
     }
 
     /**
-     * @param OptionList|array|null $options
+     * Log and display an error to the user.
+     *
+     * @param Throwable $exception
+     * @return Error
      */
-    public function options($options): void
+    public function error(Throwable $exception): Error
     {
-        if (!$this->payload->isType(PayloadType::blockSuggestion())) {
-            throw new Exception('Can only to use `options()` for block_suggestion requests');
-        }
-
-        if (is_array($options)) {
-            $options = OptionList::new()->options($options);
-        }
-
-        $this->ack($options);
+        return new Error($this, $exception);
     }
 
     public function toArray(): array
