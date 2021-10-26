@@ -69,13 +69,16 @@ trait SendsHttpRequests
      */
     private function sendHttpRequest(string $method, string $url, string $header, string $content): array
     {
+        $errorContext = compact('method', 'url');
+
         try {
             $httpOptions = self::$baseOptions + compact('method', 'header', 'content');
             $responseBody = file_get_contents($url, false, stream_context_create(['http' => $httpOptions]));
-            $responseHeader = $http_response_header ?? null;
+            $responseHeader = $http_response_header ?? [];
+            $errorContext += $responseHeader;
 
             if (empty($responseBody) || empty($responseHeader)) {
-                throw new Exception(self::$errorMessages['network']);
+                throw (new Exception(self::$errorMessages['network']))->addContext($errorContext);
             } elseif ($responseBody === 'ok') {
                 return ['ok' => true];
             }
@@ -84,14 +87,17 @@ trait SendsHttpRequests
             if (isset($data['ok']) && $data['ok'] === true) {
                 return $data;
             } else {
-                throw new Exception(sprintf(self::$errorMessages['unsuccessful'], $data['error'] ?? 'Unknown'));
+                throw (new Exception(sprintf(self::$errorMessages['unsuccessful'], $data['error'] ?? 'Unknown')))
+                    ->addContext($errorContext);
             }
         } catch (Exception $frameworkErr) {
             throw $frameworkErr;
         } catch (JsonException $jsonErr) {
-            throw new Exception(sprintf(self::$errorMessages['json_decode'], $jsonErr->getMessage()), 0, $jsonErr);
+            throw (new Exception(sprintf(self::$errorMessages['json_decode'], $jsonErr->getMessage()), 0, $jsonErr))
+                ->addContext($errorContext);
         } catch (Throwable $otherErr) {
-            throw new Exception(sprintf(self::$errorMessages['unexpected'], $otherErr->getMessage()), 0, $otherErr);
+            throw (new Exception(sprintf(self::$errorMessages['unexpected'], $otherErr->getMessage()), 0, $otherErr))
+                ->addContext($errorContext);
         }
     }
 }
