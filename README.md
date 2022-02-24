@@ -1,4 +1,27 @@
-# Slack App Framework for PHP
+<header>
+  <h1 align="center">Slack App Framework for PHP</h1>
+  <p align="center">By Jeremy Lindblom (<a href="https://twitter.com/jeremeamia">@jeremeamia</a>)</p>
+</header>
+
+<p align="center">
+  <img src="https://repository-images.githubusercontent.com/337916048/1ab9fb00-87f7-11eb-9eda-f25ffb705e87" alt="Slack PHP logo written in PHP's font" width="65%">
+</p>
+
+<p align="center">
+  <a href="http://php.net/">
+    <img src="https://img.shields.io/badge/code-php%207.4-8892bf.svg" alt="Coded in PHP 7.4">
+  </a>
+  <a href="https://packagist.org/packages/slack-php/slack-block-kit">
+    <img src="https://img.shields.io/packagist/v/slack-php/slack-app-framework.svg" alt="Packagist Version">
+  </a>
+  <a href="https://actions-badge.atrox.dev/slack-php/slack-php-app-framework/goto?ref=main">
+    <img alt="Build Status" src="https://img.shields.io/endpoint.svg?url=https%3A%2F%2Factions-badge.atrox.dev%2Fslack-php%2Fslack-php-app-framework%2Fbadge%3Fref%3Dmain&style=flat" />
+  </a>
+</p>
+
+---
+
+# Introduction
 
 A PHP framework for building Slack apps. It takes inspiration from Slack's Bolt frameworks.
 
