@@ -6,19 +6,23 @@ If you are new to Slack app development, you will want to learn about it on
 [Slack's website](https://api.slack.com/start). This library is only useful if you already understand the basics of
 building Slack applications.
 
-## :warning: WARNING: Under Heavy Development
-
-This is under heavy development and dogfooding. _Breaking changes may occur on any commit._ Also, the project is
-lacking test coverage and documentation, so use at your own risk (as is the case with most OSS).
-- For questions, feedback, suggestions, etc., use [Discussions][].
-- For issues or concerns, use [Issues][].
-
 ## Installation
 
 - Requires PHP 7.4+
 - Use Composer to install: `composer require slack-php/slack-app-framework`
 
-## Usage
+## General Usage
+
+### Quick Warning
+
+This library has been heavily dogfooded, but the project is severely lacking in test coverage and documentation, so
+use it at your own risk, as the MIT license advises.
+
+- Contributions welcome (especially for documentation and tests).
+- For questions, feedback, suggestions, etc., use [Discussions][].
+- For issues or concerns, use [Issues][].
+
+### Development Patterns
 
 When creating an app, you can configure your app from the Slack website. The framework is designed to recieve requests
 from all of your app's interaction points, so you should configure all of the URLs (e.g., in **Slash Commands**,
@@ -279,7 +283,7 @@ $ctx->container(): ContainerInterface // Returns an instance of the configured P
 
 ## Not Implemented
 
-This project is a WIP. The following are known to be missing:
+The following features are known to be missing:
 
 - OAuth flow for handling installations to a different workspace.
     - Though there are some class in the `SlackPhp\Framework\Auth` namespace if you need to roll your own right now.
