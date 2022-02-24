@@ -45,12 +45,16 @@
         }
     },
     "scripts": {
-        "style": "php-cs-fixer fix --dry-run --verbose --show-progress=none",
+        "style-lint": "php-cs-fixer fix --dry-run --verbose --show-progress=none",
         "style-fix": "php-cs-fixer fix",
         "stan": "phpstan analyse --level=5 src tests",
-        "test": "phpunit",
-        "test-unit": "phpunit --testsuite=unit",
-        "test-integ": "phpunit --testsuite=integ",
-        "test-all": ["@style", "@stan", "@test"]
+        "test": "phpunit --bootstrap=vendor/autoload.php --no-coverage tests",
+        "test-coverage": "XDEBUG_MODE=coverage phpunit --bootstrap=vendor/autoload.php --coverage-html=build/coverage --whitelist=src tests",
+        "test-debug": "XDEBUG_MODE=debug phpunit --bootstrap=vendor/autoload.php --no-coverage --debug tests",
+        "test-all":  [
+            "@style-lint",
+            "@stan",
+            "@test-coverage"
+        ]
     }
 }
