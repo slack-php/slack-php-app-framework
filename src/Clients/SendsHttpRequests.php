@@ -8,9 +8,12 @@ use JsonException;
 use SlackPhp\Framework\Exception;
 use Throwable;
 
+use function compact;
 use function file_get_contents;
+use function http_build_query;
 use function json_encode;
 use function json_decode;
+use function sprintf;
 use function stream_context_create;
 use function strlen;
 
@@ -42,7 +45,7 @@ trait SendsHttpRequests
         try {
             $content = json_encode($input, JSON_THROW_ON_ERROR);
         } catch (JsonException $jsonErr) {
-            throw new Exception(sprintf(self::$errorMessages['json_encode'], $jsonErr->getMessage()), 0, $jsonErr);
+            throw $this->createException('json_encode', compact('method', 'url'), $jsonErr);
         }
 
         $length = strlen($content);
@@ -69,13 +72,16 @@ trait SendsHttpRequests
      */
     private function sendHttpRequest(string $method, string $url, string $header, string $content): array
     {
+        $errorContext = compact('method', 'url');
+
         try {
             $httpOptions = self::$baseOptions + compact('method', 'header', 'content');
             $responseBody = file_get_contents($url, false, stream_context_create(['http' => $httpOptions]));
-            $responseHeader = $http_response_header ?? null;
+            $responseHeader = $http_response_header ?? [];
+            $errorContext += $responseHeader;
 
             if (empty($responseBody) || empty($responseHeader)) {
-                throw new Exception(self::$errorMessages['network']);
+                throw $this->createException('network', $errorContext);
             } elseif ($responseBody === 'ok') {
                 return ['ok' => true];
             }
@@ -84,14 +90,22 @@ trait SendsHttpRequests
             if (isset($data['ok']) && $data['ok'] === true) {
                 return $data;
             } else {
-                throw new Exception(sprintf(self::$errorMessages['unsuccessful'], $data['error'] ?? 'Unknown'));
+                throw $this->createException('unsuccessful', $errorContext, new Exception($data['error'] ?? 'Unknown'));
             }
         } catch (Exception $frameworkErr) {
             throw $frameworkErr;
         } catch (JsonException $jsonErr) {
-            throw new Exception(sprintf(self::$errorMessages['json_decode'], $jsonErr->getMessage()), 0, $jsonErr);
+            throw $this->createException('json_decode', $errorContext, $jsonErr);
         } catch (Throwable $otherErr) {
-            throw new Exception(sprintf(self::$errorMessages['unexpected'], $otherErr->getMessage()), 0, $otherErr);
+            throw $this->createException('unexpected', $errorContext, $otherErr);
         }
+    }
+
+    private function createException(string $messageKey, array $context = [], ?Throwable $previous = null): Exception
+    {
+        $prevMsg = $previous ? $previous->getMessage() : null;
+        $message = sprintf(self::$errorMessages[$messageKey] ?? 'Unknown error', $prevMsg);
+
+        return new Exception($message, 0, $previous, $context);
     }
 }

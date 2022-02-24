@@ -9,9 +9,6 @@
     </exclude>
   </coverage>
   <testsuites>
-    <testsuite name="unit">
-      <directory suffix="Test.php">tests/Unit</directory>
-    </testsuite>
     <testsuite name="integ">
       <directory suffix="Test.php">tests/Integration</directory>
     </testsuite>
