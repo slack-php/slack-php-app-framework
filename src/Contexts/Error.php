@@ -14,6 +14,10 @@ class Error
 {
     private Context $context;
     private Throwable $exception;
+
+    /**
+     * @var mixed[]
+     */
     private array $additionalContext;
     private string $explanation;
 
@@ -41,7 +45,7 @@ class Error
     /**
      * Adds additional context to the error that will be included in the logs.
      *
-     * @param array $additionalContext
+     * @param mixed[] $additionalContext
      * @return $this
      */
     public function addAdditionalContext(array $additionalContext): self

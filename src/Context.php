@@ -38,6 +38,8 @@ use function json_encode;
 
 /**
  * A Slack "context" provides an interface to all the data and affordances for an incoming Slack request/event.
+ *
+ * @implements ArrayAccess<mixed, mixed>
  */
 class Context implements ArrayAccess, JsonSerializable
 {
@@ -68,7 +70,7 @@ class Context implements ArrayAccess, JsonSerializable
      * This is primarily used in asynchronous processors, where an app is processing a request after it's been deferred
      * (e.g., to a queueing system). In this use case, the Context is likely being hydrated from deserialized JSON.
      *
-     * @param array $data
+     * @param mixed[] $data
      * @return self
      */
     public static function fromArray(array $data): self
@@ -80,7 +82,7 @@ class Context implements ArrayAccess, JsonSerializable
 
     /**
      * @param Payload $payload
-     * @param array $data
+     * @param mixed[] $data
      */
     public function __construct(Payload $payload, array $data = [])
     {
@@ -289,7 +291,7 @@ class Context implements ArrayAccess, JsonSerializable
      * Acks generally have an empty body, but for some payload types, it may be appropriate to send a message (command)
      * or other data (block_suggestion) as part of the ack.
      *
-     * @param Message|JsonSerializable|array|string|callable(): Message|null $ack Message/data to use as the ack body.
+     * @param Message|JsonSerializable|mixed[]|string|callable(): Message|null $ack Message/data to use as the ack body.
      * @throws JsonException if non-null ack cannot be JSON encoded.
      */
     public function ack($ack = null): void
@@ -333,7 +335,7 @@ class Context implements ArrayAccess, JsonSerializable
     }
 
     /**
-     * @param Message|array|string|callable(): Message $message
+     * @param Message|Message[]|string|callable(): Message $message
      * @param string|null $url
      */
     public function respond($message, ?string $url = null): void
@@ -351,7 +353,7 @@ class Context implements ArrayAccess, JsonSerializable
     }
 
     /**
-     * @param Message|array|string|callable(): Message $message
+     * @param Message|Message[]|string|callable(): Message $message
      * @param string|null $channel
      * @param string|null $threadTs
      */
@@ -372,7 +374,9 @@ class Context implements ArrayAccess, JsonSerializable
     }
 
     /**
-     * @param OptionList|array|null $options
+     * @param OptionList|array<string, string>|null $options'
+     *
+     * @throws JsonException
      */
     public function options($options): void
     {
@@ -388,11 +392,12 @@ class Context implements ArrayAccess, JsonSerializable
     }
 
     /**
-     * @param AppHome|array|string|callable(): AppHome $appHome
+     * @deprecated Use appHome() and its methods.
+     *
+     * @param AppHome|AppHome[]|string|callable(): AppHome $appHome
      * @param string|null $userId If null, the value from the current payload will be used.
      * @param bool $useHashIfAvailable Set to false if you want to overwrite the current app home without a hash check.
-     * @return array
-     * @deprecated Use appHome() and its methods.
+     * @return mixed[]
      */
     public function home($appHome, ?string $userId = null, bool $useHashIfAvailable = true): array
     {
@@ -454,6 +459,9 @@ class Context implements ArrayAccess, JsonSerializable
         return new Error($this, $exception);
     }
 
+    /**
+     * @return mixed[]
+     */
     public function toArray(): array
     {
         return $this->getData() + [

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace SlackPhp\Framework\Contexts;
 
 use SlackPhp\BlockKit\Surfaces\Modal;
+use JsonException;
 use SlackPhp\Framework\{Coerce, Context};
 
 class View
@@ -23,11 +24,19 @@ class View
         ]);
     }
 
+    /**
+     * @throws JsonException
+     */
     public function close(): void
     {
         $this->context->ack();
     }
 
+    /**
+     * @param string[] $errors
+     *
+     * @throws JsonException
+     */
     public function errors(array $errors): void
     {
         $this->context->ack([
@@ -37,7 +46,9 @@ class View
     }
 
     /**
-     * @param Modal|array|string|callable(): Modal $modal
+     * @param Modal[]|(callable(): Modal)|Modal|string $modal
+     *
+     * @throws JsonException
      */
     public function push($modal): void
     {
@@ -48,7 +59,9 @@ class View
     }
 
     /**
-     * @param Modal|array|string|callable(): Modal $modal
+     * @param Modal|Modal[]|string|callable(): Modal $modal
+     *
+     * @throws JsonException
      */
     public function update($modal): void
     {

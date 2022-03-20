@@ -25,7 +25,7 @@ class Home
      *
      * This is essentially a force update.
      *
-     * @param AppHome|array|string|callable(): AppHome $appHome App Home content.
+     * @param AppHome|AppHome[]|string|callable(): AppHome $appHome App Home content.
      * @param string|null $userId The ID for the user that will have their App Home updated. Defaults to current user.
      * @return bool
      */
@@ -40,7 +40,7 @@ class Home
      * This includes a hash check, which means that if the App Home is updated in another process first, then this API
      * call will fail due to the hash not matching.
      *
-     * @param AppHome|array|string|callable(): AppHome $appHome App Home content.
+     * @param AppHome|AppHome[]|string|callable(): AppHome $appHome App Home content.
      * @param string|null $userId The ID for the user that will have their App Home updated. Defaults to current user.
      * @param string|null $hash The hash for Slack to verify for conditional updates.
      * @return bool
@@ -58,7 +58,7 @@ class Home
      * This is a "best effort" approach where the hash check still occurs, but failing to update the App Home is not
      * considered an error state.
      *
-     * @param AppHome|array|string|callable(): AppHome $appHome App Home content.
+     * @param AppHome|AppHome[]|string|callable(): AppHome $appHome App Home content.
      * @param string|null $userId The ID for the user that will have their App Home updated. Defaults to current user.
      * @param string|null $hash The hash for Slack to verify for conditional updates.
      * @return bool

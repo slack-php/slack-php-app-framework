@@ -15,6 +15,10 @@ class FieldSwitch implements Listener
     private ?Listener $default;
     private string $field;
 
+    /**
+     * @phpstan-param array<Listener|callable(Context): void|class-string> $cases
+     * @param null|Listener|callable(Context): void|class-string $default
+     */
     public function __construct(string $field, array $cases, $default = null)
     {
         $default ??= $cases['*'] ?? null;

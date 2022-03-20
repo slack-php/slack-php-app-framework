@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace SlackPhp\Framework;
 
 use SlackPhp\BlockKit\Surfaces;
+use SlackPhp\BlockKit\Surfaces\Modal;
 
 /**
  * Provides helpers for coercing loosely-typed values to their actual, desired type.
@@ -14,7 +15,7 @@ final class Coerce
     /**
      * Coerces a Message-like value to an actual Message surface.
      *
-     * @param Surfaces\Message|array|string|callable(): Surfaces\Message $message
+     * @param Surfaces\Message|Surfaces\Message[]|string|callable(): Surfaces\Message $message
      * @return Surfaces\Message
      * @internal
      */
@@ -38,22 +39,22 @@ final class Coerce
     /**
      * Coerces a Modal-like value to an actual Modal surface.
      *
-     * @param Surfaces\Modal|array|string|callable(): Surfaces\Modal $modal
-     * @return Surfaces\Modal
+     * @param Modal[]|(callable(): Modal)|Modal|string $modal
+     * @return Modal
      * @internal
      */
-    public static function modal($modal): Surfaces\Modal
+    public static function modal($modal): Modal
     {
         if (is_callable($modal)) {
             $modal = $modal();
         }
 
-        if ($modal instanceof Surfaces\Modal) {
+        if ($modal instanceof Modal) {
             return $modal;
         } elseif (is_string($modal)) {
-            return Surfaces\Modal::new()->title('Thanks')->text($modal);
+            return Modal::new()->title('Thanks')->text($modal);
         } elseif (is_array($modal)) {
-            return Surfaces\Modal::fromArray($modal);
+            return Modal::fromArray($modal);
         }
 
         throw new Exception('Invalid modal content');
@@ -62,7 +63,7 @@ final class Coerce
     /**
      * Coerces an "App Home"-like value to an actual App Home surface.
      *
-     * @param Surfaces\AppHome|array|string|callable(): Surfaces\AppHome $appHome
+     * @param Surfaces\AppHome|Surfaces\AppHome[]|string|callable(): Surfaces\AppHome $appHome
      * @return Surfaces\AppHome
      * @internal
      */
@@ -106,7 +107,7 @@ final class Coerce
     /**
      * Coerces an Interceptor-like value to an actual Interceptor.
      *
-     * @param Interceptor|callable(): Interceptor|array $interceptor
+     * @param Interceptor|(callable(): Interceptor)|Interceptor[] $interceptor
      * @return Interceptor
      * @internal
      */

@@ -17,7 +17,7 @@ class Ack implements Listener
     private ?Message $message;
 
     /**
-     * @param Message|array|string|null $message Message to include in ack (for commands).
+     * @param Message|Message[]|string|null $message Message to include in ack (for commands).
      */
     public function __construct($message = null)
     {

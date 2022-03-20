@@ -8,7 +8,10 @@ use SlackPhp\Framework\Exception;
 
 class ParsingException extends Exception
 {
-    public function __construct($message, array $values = [])
+    /**
+     * @param mixed[] $values
+     */
+    public function __construct(string $message, array $values = [])
     {
         parent::__construct(vsprintf($message, $values));
     }

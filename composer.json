@@ -13,6 +13,9 @@
         "sort-packages": true,
         "platform": {
             "php": "7.4"
+        },
+        "allow-plugins": {
+            "phpstan/extension-installer": true
         }
     },
     "require": {
@@ -36,7 +39,9 @@
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^2.18",
-        "phpstan/phpstan": "^0.12.77",
+        "phpstan/extension-installer": "^1.1",
+        "phpstan/phpstan": "^1.0",
+        "phpstan/phpstan-phpunit": "^1.0",
         "phpunit/phpunit": "^9.5"
     },
     "autoload-dev": {
@@ -45,12 +50,17 @@
         }
     },
     "scripts": {
-        "style-lint": "php-cs-fixer fix --dry-run --verbose --show-progress=none",
-        "style-fix": "php-cs-fixer fix",
-        "stan": "phpstan analyse --level=5 src tests",
+        "style-lint": "PHP_CS_FIXER_IGNORE_ENV=1 php-cs-fixer fix --dry-run --verbose --show-progress=none",
+        "style-fix": "PHP_CS_FIXER_IGNORE_ENV=1 php-cs-fixer fix",
+        "stan": "phpstan analyse --level=7 src tests",
         "test": "phpunit --bootstrap=vendor/autoload.php --no-coverage tests",
         "test-coverage": "XDEBUG_MODE=coverage phpunit --bootstrap=vendor/autoload.php --coverage-html=build/coverage --whitelist=src tests",
         "test-debug": "XDEBUG_MODE=debug phpunit --bootstrap=vendor/autoload.php --no-coverage --debug tests",
+        "fix": [
+            "@style-fix",
+            "@stan",
+            "@test-coverage"
+        ],
         "test-all":  [
             "@style-lint",
             "@stan",

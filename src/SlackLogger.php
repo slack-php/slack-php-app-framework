@@ -8,14 +8,14 @@ use Psr\Log\{AbstractLogger, LoggerInterface, NullLogger};
 
 class SlackLogger extends AbstractLogger
 {
+    /**
+     * @var string[]
+     */
     private array $context;
+
     private LoggerInterface $logger;
     private string $name;
 
-    /**
-     * @param LoggerInterface|null $logger
-     * @return self
-     */
     public static function wrap(?LoggerInterface $logger): self
     {
         if (!$logger instanceof self) {
@@ -25,9 +25,6 @@ class SlackLogger extends AbstractLogger
         return $logger;
     }
 
-    /**
-     * @param LoggerInterface|null $logger
-     */
     public function __construct(?LoggerInterface $logger = null)
     {
         $this->logger = $logger ?? new NullLogger();
@@ -60,8 +57,8 @@ class SlackLogger extends AbstractLogger
 
     /**
      * @deprecated use addContext() instead
-     * @param array $context
-     * @return $this
+     *
+     * @param string[] $context
      */
     public function withData(array $context): self
     {
@@ -70,6 +67,9 @@ class SlackLogger extends AbstractLogger
         return $this;
     }
 
+    /**
+     * @param string[] $context
+     */
     public function addContext(array $context): self
     {
         $this->context = $context + $this->context;

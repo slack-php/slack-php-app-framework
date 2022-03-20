@@ -25,6 +25,9 @@ class InputState implements JsonSerializable
         return new self($context->payload()->getState()->toArray());
     }
 
+    /**
+     * @param array<string, mixed> $stateData
+     */
     public function __construct(array $stateData)
     {
         $data = [];

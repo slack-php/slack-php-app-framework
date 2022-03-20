@@ -122,7 +122,7 @@ final class PayloadType
         return self::withValue('workflow_step_edit');
     }
 
-    private function __construct($value)
+    private function __construct(?string $value)
     {
         $this->value = $value;
     }

@@ -23,9 +23,9 @@ class Modals
     /**
      * Opens a new modal.
      *
-     * @param Modal|array|string|callable(): Modal $modal Modal content.
+     * @param Modal|Modal[]|string|callable(): Modal $modal Modal content.
      * @param string|null $triggerId Non-expired trigger ID. Defaults to the trigger ID from the current payload.
-     * @return array
+     * @return mixed[]
      */
     public function open($modal, ?string $triggerId = null): array
     {
@@ -47,9 +47,9 @@ class Modals
      *
      * Note: A modal stack can have up to 3 modals.
      *
-     * @param Modal|array|string|callable(): Modal $modal Modal content.
+     * @param Modal|Modal[]|string|callable(): Modal $modal Modal content.
      * @param string|null $triggerId Non-expired trigger ID. Defaults to the trigger ID from the current payload.
-     * @return array
+     * @return mixed[]
      */
     public function push($modal, ?string $triggerId = null): array
     {
@@ -71,10 +71,10 @@ class Modals
      *
      * This is essentially a force update.
      *
-     * @param Modal|array|string|callable(): Modal $modal Modal content.
+     * @param Modal|Modal[]|string|callable(): Modal $modal Modal content.
      * @param string|null $viewId The modal's ID. Defaults to the view ID from the current payload.
      * @param string|null $extId The custom external ID for the modal, if one was assigned.
-     * @return array
+     * @return mixed[]
      */
     public function update($modal, ?string $viewId = null, ?string $extId = null): array
     {
@@ -87,11 +87,11 @@ class Modals
      * This includes a hash check, which means that if the modal is updated in another process first, then this API call
      * will fail due to the hash not matching.
      *
-     * @param Modal|array|string|callable(): Modal $modal Modal content.
+     * @param Modal|Modal[]|string|callable(): Modal $modal Modal content.
      * @param string|null $viewId The modal's ID. Defaults to the view ID from the current payload.
      * @param string|null $hash The hash for Slack to verify for conditional updates.
      * @param string|null $extId The custom external ID for the modal, if one was assigned.
-     * @return array
+     * @return mixed[]
      */
     public function safeUpdate($modal, ?string $viewId = null, ?string $hash = null, ?string $extId = null): array
     {
@@ -106,11 +106,11 @@ class Modals
      * This is a "best effort" approach where the hash check still occurs, but failing to update the modal is not
      * considered an error state.
      *
-     * @param Modal|array|string|callable(): Modal $modal Modal content.
+     * @param Modal|Modal[]|string|callable(): Modal $modal Modal content.
      * @param string|null $viewId The modal's ID. Defaults to the view ID from the current payload.
      * @param string|null $hash The hash for Slack to verify for conditional updates.
      * @param string|null $extId The custom external ID for the modal, if one was assigned.
-     * @return array
+     * @return mixed[]
      */
     public function updateIfSafe($modal, ?string $viewId = null, ?string $hash = null, ?string $extId = null): array
     {
@@ -128,7 +128,7 @@ class Modals
      * @param string|null $viewId The modal's ID. Defaults to the view ID from the current payload.
      * @param string|null $hash The hash for Slack to verify for conditional updates.
      * @param string|null $externalId The custom external ID for the modal, if one was assigned.
-     * @return array
+     * @return mixed[]
      */
     private function callViewsUpdateApi(Modal $modal, ?string $viewId, ?string $hash, ?string $externalId): array
     {

@@ -18,6 +18,10 @@ class Definition
     /** @var OptDefinition[] */
     private array $opts = [];
 
+    /**
+     * @param ArgDefinition[] $args
+     * @param OptDefinition[] $opts
+     */
     public function __construct(
         string $name,
         ?string $subCommand,

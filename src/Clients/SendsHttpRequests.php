@@ -19,6 +19,9 @@ use function strlen;
 
 trait SendsHttpRequests
 {
+    /**
+     * @var array<string, mixed>
+     */
     private static array $baseOptions = [
         'ignore_errors' => true,
         'protocol_version' => 1.1,
@@ -26,6 +29,9 @@ trait SendsHttpRequests
         'user_agent' => 'slack-php/slack-app-framework',
     ];
 
+    /**
+     * @var array<string, string>
+     */
     private static array $errorMessages = [
         'network' => 'Slack API request could not be completed',
         'unexpected' => 'Slack API request experienced an unexpected error: %s',
@@ -34,6 +40,11 @@ trait SendsHttpRequests
         'json_encode' => 'Slack API request content contained invalid JSON: %s',
     ];
 
+    /**
+     * @param mixed[] $input
+     * @return mixed[]
+     * @throws JsonException
+     */
     private function sendJsonRequest(string $method, string $url, array $input): array
     {
         $header = '';
@@ -54,6 +65,10 @@ trait SendsHttpRequests
         return $this->sendHttpRequest($method, $url, $header, $content);
     }
 
+    /**
+     * @param mixed[] $input
+     * @return mixed[]
+     */
     private function sendFormRequest(string $method, string $url, array $input): array
     {
         $content = http_build_query($input);
@@ -77,6 +92,7 @@ trait SendsHttpRequests
         try {
             $httpOptions = self::$baseOptions + compact('method', 'header', 'content');
             $responseBody = file_get_contents($url, false, stream_context_create(['http' => $httpOptions]));
+            // @phpstan-ignore-next-line
             $responseHeader = $http_response_header ?? [];
             $errorContext += $responseHeader;
 
@@ -101,6 +117,9 @@ trait SendsHttpRequests
         }
     }
 
+    /**
+     * @param mixed[] $context
+     */
     private function createException(string $messageKey, array $context = [], ?Throwable $previous = null): Exception
     {
         $prevMsg = $previous ? $previous->getMessage() : null;

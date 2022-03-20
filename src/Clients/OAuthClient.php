@@ -22,7 +22,7 @@ class OAuthClient
      * @param string $clientSecret
      * @param string $temporaryAccessCode
      * @param string|null $redirectUri
-     * @return array Includes access_token, team.id, and enterprise.id fields
+     * @return mixed[] Includes access_token, team.id, and enterprise.id fields
      * @throws Exception
      */
     public function createAccessToken(
@@ -42,7 +42,7 @@ class OAuthClient
     /**
      * @param string $accessToken
      * @param bool|null $test
-     * @return array
+     * @return mixed[]
      * @throws Exception
      */
     public function revokeAccessToken(string $accessToken, ?bool $test = null): array

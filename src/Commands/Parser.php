@@ -39,7 +39,7 @@ class Parser
 
     /**
      * @param string $input
-     * @return array
+     * @return mixed[]
      * @throws ParsingException if command is invalid.
      */
     public function parse(string $input): array
@@ -77,7 +77,7 @@ class Parser
 
     /**
      * @param string $input
-     * @return iterable
+     * @return iterable<mixed>
      * @throws ParsingException for invalid args/opts
      */
     private function getArgsAndOpts(string $input): iterable
@@ -124,7 +124,7 @@ class Parser
      * Borrowed, with gratitude, from the Symfony Console component.
      *
      * @param string $input
-     * @return iterable
+     * @return iterable<mixed>
      * @see https://github.com/symfony/console/blob/5.x/Input/StringInput.php
      */
     private function tokenize(string $input): iterable
@@ -156,7 +156,7 @@ class Parser
     /**
      * @param int $index
      * @param Token $token
-     * @return array
+     * @return mixed[]
      */
     private function createArg(int $index, Token $token): array
     {
@@ -183,7 +183,7 @@ class Parser
 
     /**
      * @param Token $token
-     * @return array|null
+     * @return mixed[]|null
      * @throws ParsingException
      */
     private function createOpt(Token $token): ?array
