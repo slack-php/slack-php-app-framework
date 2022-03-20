@@ -47,7 +47,7 @@ class ShellExecDeferrer implements Deferrer
 
     private function serializeContext(Context $context): string
     {
-        $fn = $this->serializeCallback ?? fn (Context $ctx): string => base64_encode(json_encode($ctx->toArray()));
+        $fn = $this->serializeCallback ?? fn (Context $ctx): string => base64_encode((string)json_encode($ctx->toArray()));
 
         return $fn($context);
     }

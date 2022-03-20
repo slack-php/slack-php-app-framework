@@ -29,7 +29,7 @@ class Token
         }
     }
 
-    public function resolveValue($value): void
+    public function resolveValue(?string $value): void
     {
         $this->value = $value;
     }

@@ -98,7 +98,7 @@ final class Env
     /**
      * Gets the scopes from the environment, which the app uses in the OAuth flow when installed to a workspace.
      *
-     * @return array
+     * @return string[]
      */
     public function getScopes(): array
     {

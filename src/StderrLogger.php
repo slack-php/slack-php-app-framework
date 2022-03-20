@@ -23,9 +23,14 @@ class StderrLogger extends AbstractLogger
 
     private int $minLevel;
 
-    /** @var resource */
+    /**
+     * @var resource
+     */
     private $stream;
 
+    /**
+     * @param mixed $stream
+     */
     public function __construct(string $minLevel = LogLevel::WARNING, $stream = 'php://stderr')
     {
         if (!isset(self::LOG_LEVEL_MAP[$minLevel])) {
@@ -37,10 +42,10 @@ class StderrLogger extends AbstractLogger
         if (is_resource($stream)) {
             $this->stream = $stream;
         } elseif (is_string($stream)) {
-            $this->stream = fopen($stream, 'a');
-            if (!$this->stream) {
+            if (!$fopen = fopen($stream, 'a')) {
                 throw new Exception('Unable to open stream: ' . $stream);
             }
+            $this->stream = $fopen;
         } else {
             throw new InvalidArgumentException('A stream must either be a resource or a string');
         }

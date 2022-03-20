@@ -48,7 +48,7 @@ class EchoResponseEmitter implements ResponseEmitter
      * @throws HttpException if headers have already been sent.
      * @throws HttpException if output is present in the output buffer.
      */
-    private function assertNoPreviousOutput()
+    private function assertNoPreviousOutput(): void
     {
         if (headers_sent()) {
             throw new HttpException('HTTP Error: Headers already sent');

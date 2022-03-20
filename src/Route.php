@@ -42,7 +42,7 @@ class Route
     }
 
     /**
-     * @param Interceptor|callable(): Interceptor|array $interceptor
+     * @param Interceptor|callable(): Interceptor|Interceptor[] $interceptor
      * @param Listener|callable(Context): void|class-string $listener
      * @return Listener
      */

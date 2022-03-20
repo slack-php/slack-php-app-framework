@@ -30,6 +30,9 @@ class FakeResponseEmitter implements ResponseEmitter
         return $this->lastResponse;
     }
 
+    /**
+     * @phpstan-return string[]
+     */
     public function getLastResponseData(): array
     {
         if ($this->lastResponse === null) {

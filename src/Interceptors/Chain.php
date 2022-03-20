@@ -40,6 +40,9 @@ class Chain implements Interceptor
         return $this;
     }
 
+    /**
+     * @param Interceptor[] $interceptors
+     */
     public function addMultiple(array $interceptors, bool $prepend = false): self
     {
         foreach ($interceptors as $interceptor) {

@@ -15,7 +15,7 @@ class CallbackFilter extends Filter
 
     /**
      * @param callable $filterFn
-     * @param Listener|callable|string|null $defaultListener
+     * @param Listener|callable|class-string|null $defaultListener
      */
     public function __construct(callable $filterFn, $defaultListener = null)
     {

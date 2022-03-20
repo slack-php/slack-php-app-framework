@@ -58,11 +58,17 @@ class IntegTestCase extends TestCase
         }
     }
 
+    /**
+     * @phpstan-param string[] $data
+     */
     protected function createCommandRequest(array $data, ?int $timestamp = null): ServerRequestInterface
     {
         return $this->createRequest(http_build_query($data), 'application/x-www-form-urlencoded', $timestamp);
     }
 
+    /**
+     * @phpstan-param array<string, array<string>|string> $data
+     */
     protected function createInteractiveRequest(array $data, ?int $timestamp = null): ServerRequestInterface
     {
         return $this->createRequest(
@@ -72,9 +78,12 @@ class IntegTestCase extends TestCase
         );
     }
 
+    /**
+     * @phpstan-param string[] $data
+     */
     protected function createEventRequest(array $data, ?int $timestamp = null): ServerRequestInterface
     {
-        return $this->createRequest(json_encode($data), 'application/json', $timestamp);
+        return $this->createRequest((string)json_encode($data), 'application/json', $timestamp);
     }
 
     private function createRequest(string $content, string $contentType, ?int $timestamp = null): ServerRequestInterface

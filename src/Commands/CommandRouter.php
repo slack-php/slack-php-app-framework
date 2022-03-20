@@ -33,6 +33,9 @@ class CommandRouter implements Listener
         return new self();
     }
 
+    /**
+     * @param array<string, Listener|callable(Context): void|class-string> $routes
+     */
     public function __construct(array $routes = [])
     {
         $this->routes = [];

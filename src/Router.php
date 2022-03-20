@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace SlackPhp\Framework;
 
-use JsonSerializable;
+use SlackPhp\BlockKit\Surfaces\Message;
 use SlackPhp\Framework\Contexts\PayloadType;
 
 /**
@@ -38,7 +38,7 @@ class Router implements Listener
     /**
      * Sets an "ack" message used for async commands to inform the user to wait for the result (e.g., "processing...").
      *
-     * @param JsonSerializable|array|string $ack
+     * @param Message[]|Message|string|null $ack
      * @return $this
      */
     public function withCommandAck($ack): self

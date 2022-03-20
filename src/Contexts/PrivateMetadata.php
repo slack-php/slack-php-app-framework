@@ -6,6 +6,9 @@ namespace SlackPhp\Framework\Contexts;
 
 use ArrayAccess;
 
+/**
+ * @implements ArrayAccess<int|string, mixed>
+ */
 class PrivateMetadata implements ArrayAccess
 {
     use HasData;
@@ -18,6 +21,9 @@ class PrivateMetadata implements ArrayAccess
         return new self($data);
     }
 
+    /**
+     * @param string[] $data
+     */
     public static function encode(array $data): string
     {
         return base64_encode(http_build_query($data));

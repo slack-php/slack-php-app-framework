@@ -8,6 +8,7 @@ use JsonSerializable;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 use SlackPhp\Framework\Auth\{AppCredentials, TokenStore};
+use SlackPhp\BlockKit\Surfaces\Message;
 use SlackPhp\Framework\Contexts\PayloadType;
 
 /**
@@ -250,11 +251,15 @@ class App extends Application
     /**
      * Sets an "ack" message used for async commands to inform the user to wait for the result (e.g., "processing...").
      *
-     * @param JsonSerializable|array|string $ack
+     * @param JsonSerializable|Message[]|Message|string|null $ack
      * @return $this
      */
     public function withCommandAck($ack): self
     {
+        if ($ack instanceof JsonSerializable) {
+            $ack = serialize($ack);
+        }
+
         $this->router->withCommandAck($ack);
 
         return $this;

@@ -40,6 +40,9 @@ class OAuthLink
         return $this;
     }
 
+    /**
+     * @param string[] $scopes
+     */
     public function withScopes(array $scopes): self
     {
         $this->scopes = $scopes;
@@ -47,6 +50,9 @@ class OAuthLink
         return $this;
     }
 
+    /**
+     * @param string[] $userScopes
+     */
     public function withUserScopes(array $userScopes): self
     {
         $this->userScopes = $userScopes;

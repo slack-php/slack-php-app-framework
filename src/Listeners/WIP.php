@@ -6,12 +6,16 @@ namespace SlackPhp\Framework\Listeners;
 
 use SlackPhp\Framework\{Context, Listener};
 use SlackPhp\Framework\Contexts\PayloadType;
+use JsonException;
 
 /**
  * Simple listener that displays/logs a "Work in progress" message in whichever medium makes the most sense.
  */
 class WIP implements Listener
 {
+    /**
+     * @throws JsonException
+     */
     public function handle(Context $context): void
     {
         $hasApi = $context->getAppConfig()->getAppCredentials()->supportsApiAuth();

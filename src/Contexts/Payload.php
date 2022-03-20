@@ -47,6 +47,9 @@ class Payload implements JsonSerializable
         return new Payload($data['payload'] ?? $data);
     }
 
+    /**
+     * @param string[] $data
+     */
     public function __construct(array $data = [])
     {
         if (isset($data['type'])) {
@@ -202,7 +205,7 @@ class Payload implements JsonSerializable
     /**
      * Gets indentifying information about the payload for the purposes of logging/debugging.
      *
-     * @return array
+     * @return array<string, string|null>
      */
     public function getSummary(): array
     {

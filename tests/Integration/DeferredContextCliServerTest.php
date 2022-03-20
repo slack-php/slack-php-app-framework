@@ -13,7 +13,7 @@ class DeferredContextCliServerTest extends TestCase
 {
     public function testCanProcessDeferredContext(): void
     {
-        $serializedContext = base64_encode(json_encode([
+        $serializedContext = base64_encode((string)json_encode([
             '_acknowledged' => true,
             '_deferred' => true,
             '_payload' => [

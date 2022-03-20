@@ -8,19 +8,22 @@ use SlackPhp\Framework\Exception;
 
 trait HasData
 {
-    /** @var array<string, mixed>  */
+    /** @var array<int|string, mixed>  */
     protected array $data = [];
 
     /**
      * This constructor can (and likely should be) be overridden by trait users.
      *
-     * @param array<string, mixed> $data
+     * @param array<int|string, mixed> $data
      */
     public function __construct(array $data = [])
     {
         $this->setData($data);
     }
 
+    /**
+     * @param array<int|string, mixed> $data
+     */
     private function setData(array $data): void
     {
         foreach ($data as $key => $value) {
@@ -103,8 +106,8 @@ trait HasData
     }
 
     /**
-     * @param array $keys
-     * @param array $data
+     * @param mixed[] $keys
+     * @param mixed[] $data
      * @return mixed
      */
     private function getDeep(array $keys, array &$data)
@@ -135,14 +138,17 @@ trait HasData
      *
      * Scrubs any sensitive keys.
      *
-     * @return array
+     * @return mixed[]
      */
     public function toArray(): array
     {
         return $this->data;
     }
 
-    public function jsonSerialize()
+    /**
+     * @return mixed[]
+     */
+    public function jsonSerialize(): array
     {
         return $this->toArray();
     }
