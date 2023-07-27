@@ -49,7 +49,7 @@ trait SendsHttpRequests
         }
 
         $length = strlen($content);
-        $header .= "Content-Type: application/json\r\nContent-Length: {$length}\r\n";
+        $header .= "Content-Type: application/json; charset=utf-8\r\nContent-Length: {$length}\r\n";
 
         return $this->sendHttpRequest($method, $url, $header, $content);
     }
